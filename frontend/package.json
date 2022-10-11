@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "start": "vue-cli-service serve --open"
   },
   "dependencies": {
     "axios": "^1.1.2",
     "core-js": "^3.6.5",
+    "jquery": "^3.6.1",
+    "mdb-ui-kit": "^5.0.0",
+    "mdb-vue-ui-kit": "^3.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
@@ -20,7 +24,8 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "sass": "^1.26.5",
-    "sass-loader": "^8.0.2"
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-mdb5": "~1.2.0"
   },
   "browserslist": [
     "> 1%",
