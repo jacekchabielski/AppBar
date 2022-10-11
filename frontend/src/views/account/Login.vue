@@ -14,8 +14,7 @@
       
                         <div class="d-flex flex-row align-items-center mb-4">
                           <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                          <div class="form-outline">
-                            
+                          <div class="form-outline flex-fill mb-0">
                             <input type="text" id="login" class="form-control" v-model="username" />
                             <label class="form-label" for="form3Example1c">Login</label>
                           </div>
