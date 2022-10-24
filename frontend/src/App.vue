@@ -1,8 +1,10 @@
 <template>
 
   <router-view/>
+ 
 </template>
 <script>
+
 import axios from 'axios'
 
   export default {
@@ -25,9 +27,11 @@ import axios from 'axios'
 </script>
 
 <style lang="scss">
+@import '~@/../mdb/scss/index.free.scss';
+
 @import '~mdb-ui-kit/css/mdb.min.css';
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

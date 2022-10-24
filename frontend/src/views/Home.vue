@@ -3,6 +3,8 @@
     <navbar></navbar>
     udalo ci sie zalogowac, gratulacje !
 
+    
+   
    
   </div>
 </template>
