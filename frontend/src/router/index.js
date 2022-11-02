@@ -4,12 +4,25 @@ import SignUp from '../views/account/SignUp.vue'
 import Login from '../views/account/Login.vue'
 import store from '../store'
 import Logout from '../views/account/Logout.vue'
-
+import AddProduct from '../views/product/AddProduct.vue'
+import ViewProduct from '../views/product/ViewProduct.vue'
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/addProduct',
+    name: 'addProduct',
+    component: AddProduct, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/ViewProduct',
+    name: 'ViewProduct',
+    component: ViewProduct, 
     meta: { requireLogin: true}
   },
   

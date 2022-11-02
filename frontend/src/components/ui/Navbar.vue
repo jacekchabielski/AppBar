@@ -7,15 +7,13 @@
   </MDBNavbarToggler>
   <MDBCollapse v-model="collapse1" id="navbarSupportedContent">
     <MDBNavbarNav center class="mb-2 mb-lg-0">
-      <MDBNavbarItem to="#" >
-   
+      <MDBNavbarItem to="/addProduct" >
+        Dodaj produkt
       </MDBNavbarItem>
-      <MDBNavbarItem to="#" >
-    
+      <MDBNavbarItem to="/ViewProduct" >
+        Wyswietl produkty
       </MDBNavbarItem>
-      <MDBNavbarItem to="#" >
- 
-      </MDBNavbarItem>
+      
       <MDBNavbarNav right>
       <MDBNavbarItem>
         <!-- Navbar dropdown -->

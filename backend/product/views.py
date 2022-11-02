@@ -1,3 +1,4 @@
+from itertools import product
 from django.shortcuts import render
 from .models import Product
 from .serializers import ProductSerializer
@@ -17,7 +18,10 @@ class ViewProducts(APIView):
         data = self.request.data
         serializer = ProductSerializer(data = data)
         if serializer.is_valid():
-            serializer.save()
+            product = serializer.save()
+            if 'image' in data:
+                product.image = data['image']
+                product.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status = status.HTTP_422_UNPROCESSABLE_ENTITY)

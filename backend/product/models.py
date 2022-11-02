@@ -10,7 +10,7 @@ class Product(models.Model):
     deleted = models.BooleanField(default = False)
     name = models.CharField(max_length = 255)
     description = models.TextField(blank = True)
-    product_quantity = models.PositiveIntegerField(db_index = True, default = 0)
+    product_quantity = models.IntegerField(blank = True, null = True, default = 0)
     image = models.ImageField(upload_to = 'uploads/', blank = True, null = True)
     thumbnail = models.ImageField(upload_to = 'uploads/', blank = True, null = True)
     slug = models.SlugField(max_length = 255, blank = True)
