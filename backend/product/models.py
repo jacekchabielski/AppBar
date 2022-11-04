@@ -27,7 +27,7 @@ class Product(models.Model):
 
 
     def get_absolute_url(self):
-        return f'/{self.slug}/'
+        return f'/{self.id}/'
 
     def get_image(self):
         if self.image:

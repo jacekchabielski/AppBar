@@ -6,6 +6,7 @@ import store from '../store'
 import Logout from '../views/account/Logout.vue'
 import AddProduct from '../views/product/AddProduct.vue'
 import ViewProduct from '../views/product/ViewProduct.vue'
+import EditProduct from '../views/product/EditProduct.vue'
 const routes = [
   {
     path: '/',
@@ -20,12 +21,17 @@ const routes = [
     meta: { requireLogin: true}
   },
   {
-    path: '/ViewProduct',
+    path: '/ViewProduct',  //! url do wszystkich produktow
     name: 'ViewProduct',
     component: ViewProduct, 
     meta: { requireLogin: true}
   },
-  
+  {
+    path: '/EditProduct/:id/', //! url do edycji konkretnego produktu
+    name: 'EditProduct',
+    component: EditProduct, 
+    meta: { requireLogin: true}
+  },
   {
     path: '/about',
     name: 'About',

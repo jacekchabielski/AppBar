@@ -2,60 +2,63 @@
     <navbar></navbar>
     <div class="container">
 
-    
-    <MDBCard class="center-block">
-        
-        <MDBCardBody>
-    <form @submit.prevent="submitForm">
-        <div class="row">
-        <div class="col-md-6">    
-        <MDBInput type="text" label="name" id="name" wrapperClass="mb-4" v-model="name" required/>
-        <MDBTextarea label="description" id="description" wrapperClass="mb-4" v-model="description" rows="4" required />
-        <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4" v-model="product_quantity" required/>
-        
-        </div> 
-    
 
-        <div class="col-md-6">
-            <div v-if="imagePreview.length === 0">
-                <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
-                class="rounded-circle" alt="example placeholder" style="width: 200px;"  />
-            </div>
-            <div v-if="imagePreview.length > 0">
-                <img :src="imagePreview" alt="zdjecie" class="rounded-circle" style="width:200px;">
-            </div>
-            <div>
-                <div class="btn btn-primary btn-rounded">
-                    <MDBFile class="form-control d-none" label="zdjecie"  @change="handleFileUpload($event)" id="image" accept=".jpg,.jpeg,.png" />
-                </div>
-                
-            </div>
-        </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <MDBBtn color="primary" block type="submit"> Dodaj </MDBBtn>
-            </div>
-            
-            <div v-if="alert">
-                <p>pomyslnie dodano !</p>
-            </div>
-        </div>
-        
-    </form>
-        </MDBCardBody>
-    </MDBCard>
-</div>
+        <MDBCard class="center-block">
+
+            <MDBCardBody>
+                <form @submit.prevent="submitForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <MDBInput type="text" label="name" id="name" wrapperClass="mb-4" v-model="name" required />
+                            <MDBTextarea label="description" id="description" wrapperClass="mb-4" v-model="description"
+                                rows="4" required />
+                            <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4"
+                                v-model="product_quantity" required />
+
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div v-if="imagePreview.length === 0">
+                                <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
+                                    class="rounded-circle" alt="example placeholder" style="width: 200px;" />
+                            </div>
+                            <div v-if="imagePreview.length > 0">
+                                <img :src="imagePreview" alt="zdjecie" class="rounded-circle" style="width:200px;">
+                            </div>
+                            <div>
+                                <div class="btn btn-primary btn-rounded">
+                                    <MDBFile class="form-control d-none" label="zdjecie"
+                                        @change="handleFileUpload($event)" id="image" accept=".jpg,.jpeg,.png" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-4">
+                            <MDBBtn color="primary" block type="submit"> Dodaj </MDBBtn>
+                        </div>
+
+                        <div v-if="alert">
+                            <p>pomyslnie dodano !</p>
+                        </div>
+                    </div>
+
+                </form>
+            </MDBCardBody>
+        </MDBCard>
+    </div>
 </template>
 
 <script>
 
-    import {MDBInput,MDBBtn,MDBCard,MDBCardBody,MDBTextarea,MDBFile} from "mdb-vue-ui-kit";
-    import { ref } from "vue";
-    import axios from "axios";
-    import FormData from "form-data";
-    import Navbar from "@/components/ui/Navbar.vue";
-    export default {
+import { MDBInput, MDBBtn, MDBCard, MDBCardBody, MDBTextarea, MDBFile } from "mdb-vue-ui-kit";
+import { ref } from "vue";
+import axios from "axios";
+import FormData from "form-data";
+import Navbar from "@/components/ui/Navbar.vue";
+export default {
     components: {
         MDBFile,
         MDBTextarea,
@@ -65,10 +68,10 @@
         MDBBtn,
         Navbar,
     },
-    data(){
+    data() {
         return {
             name: "",
-            description:"",
+            description: "",
             product_quantity: "",
             token: "",
             image: "",
@@ -76,37 +79,37 @@
             alert: false,
         }
     },
-    computed:{
+    computed: {
         getToken() {
             return this.$store.state.token;
         }
     },
-    methods:{
-        submitForm(){
+    methods: {
+        submitForm() {
             let formData = new FormData();
-            formData.append('name',this.name);
+            formData.append('name', this.name);
             formData.append('product_quantity', this.product_quantity);
-            formData.append('description',this.description);
-            formData.append('image',this.image);
+            formData.append('description', this.description);
+            formData.append('image', this.image);
             axios
-                .post('/api/v1/products/',formData,{
+                .post('/api/v1/products/', formData, {
                     headers: {
                         Authorization: `Token ${this.$store.state.user.token}`
                     }
                 })
-                .then((response)=>{
+                .then((response) => {
                     console.log(response);
                     this.alert = true;
                 })
-                .catch((error)=>{
+                .catch((error) => {
                     console.log(error);
                 })
         },
-        handleFileUpload(event){
+        handleFileUpload(event) {
             var input = event.target;
-            if(input.files && input.files[0]){ //! jesli mamy plik
+            if (input.files && input.files[0]) { //! jesli mamy plik
                 var reader = new FileReader();
-                reader.onload = (e)=>{
+                reader.onload = (e) => {
                     this.imagePreview = e.target.result;
                 };
                 reader.readAsDataURL(input.files[0]); //base 64
@@ -116,6 +119,6 @@
         }
 
     },
-    
-    };
+
+};
 </script>

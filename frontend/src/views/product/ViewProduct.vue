@@ -13,22 +13,23 @@
             <tr v-for="product in products" v-bind:key="product.id">
                 <td>
                     <div class="d-flex align-items-center">
-                        <img v-bind:src="product.get_thumbnail"
-                            style="width: 45px; height: 45px" class="rounded-circle" />
+                        <img v-bind:src="product.get_thumbnail" style="width: 81px; height: 81px"
+                            class="rounded-circle" />
                         <div class="ms-3">
-                            <p class="fw-bold mb-1">{{product.name}}</p>
+                            <p class="fw-bold mb-1">{{ product.name }}</p>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <p class="fw-normal mb-1">{{product.description}}</p>
+                    <p class="fw-normal mb-1">{{ product.description }}</p>
                 </td>
-                <td>{{product.product_quantity}}</td>
+                <td>{{ product.product_quantity }}</td>
                 <td>
-                    <MDBBtn color="link" size="sm" rounded> Edit </MDBBtn>
+                    <MDBBtn color="link" size="sm" rounded > <router-link v-bind:to="'EditProduct'+product.get_absolute_url">Edytuj</router-link> </MDBBtn>
+
                 </td>
             </tr>
-            
+
         </tbody>
     </MDBTable>
 </template>
@@ -37,39 +38,38 @@
 <script>
 import axios from "axios";
 import Navbar from "@/components/ui/Navbar.vue";
-  import {
+import {
     MDBTable,
     MDBBtn,
     MDBBadge,
-  } from 'mdb-vue-ui-kit';
+} from 'mdb-vue-ui-kit';
 
-  export default {
+export default {
     components: {
-      MDBTable,
-      MDBBtn,
-      MDBBadge,
-      Navbar,
+        MDBTable,
+        MDBBtn,
+        MDBBadge,
+        Navbar,
     },
-    data(){
-        return{
-            products:{}
+    data() {
+        return {
+            products: {}
         }
     },
-    mounted(){
+    mounted() {             //~ wywołanie metody przy zmontowaniu strony
         this.getProducts();
     },
-    methods:{
-        async getProducts(){
+    methods: {
+        async getProducts() {
             axios
-                .get('/api/v1/products/')
-                .then((response)=>{
+                .get('/api/v1/products/') //* get pobierający wszystkie produkty (które nie są usunięte)
+                .then((response) => {
                     this.products = response.data;
                 })
-                .catch((error)=>{
+                .catch((error) => {
                     console.log(error);
                 })
-        }
-        
+        },
     }
-  };
+};
 </script>
