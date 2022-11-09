@@ -92,7 +92,7 @@ export default {
             formData.append('description', this.description);
             formData.append('image', this.image);
             axios
-                .post('/api/v1/products/', formData, {
+                .post('/api/v1/product/', formData, {
                     headers: {
                         Authorization: `Token ${this.$store.state.user.token}`
                     }

@@ -22,14 +22,19 @@
             <img
             src="https://mdbootstrap.com/img/Photos/Avatars/img (31).webp"
             class="rounded-circle"
-            height="22"
+            height="26"
             alt=""
             loading="lazy"
           />
+          <strong class="ms-2"></strong>
             </MDBDropdownToggle>
+            
           <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-            <MDBDropdownItem href="#">Mój profil</MDBDropdownItem>
-            <MDBDropdownItem href="/Logout">wyloguj</MDBDropdownItem>
+            <MDBDropdownItem header href="#">Witaj, {{username}}</MDBDropdownItem>
+            <hr>
+            <MDBDropdownItem href="#"><i class="fas fa-user-alt"></i> Mój profil</MDBDropdownItem>
+            
+            <MDBDropdownItem href="/Logout"><i class="fas fa-sign-out-alt"></i> wyloguj się</MDBDropdownItem>
           </MDBDropdownMenu>
         </MDBDropdown>
       </MDBNavbarItem>
@@ -77,6 +82,7 @@ components: {
 },
 data(){
   return {
+    username: "",
     user_slug: ""
   }
 },
@@ -92,6 +98,14 @@ data(){
     }
     
   },
+  beforeMount(){
+    this.username = this.getUsername;
+  },
+  computed: {
+    getUsername(){
+      return this.$store.state.user.username;
+    }
+  }
   
 
 

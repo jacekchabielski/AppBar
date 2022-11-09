@@ -10,14 +10,29 @@ from rest_framework import status
 from django.http import Http404
 
 
-
-
-#! pobieranie wszystkiego
 class ViewProducts(APIView):
-    def get(self, request):
+    def get(self, request): #! pobieranie wszystkiego
         products = Product.objects.filter(Q(deleted=False)) #! ktore nie sa usuniete (deleted=False)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+
+
+
+
+
+class ViewProduct(APIView):
+    
+    def get(self, id):
+        data = self.request.GET
+        id = self.request.GET.get('id')  
+
+        print(id)
+        product = self.get_object(id)
+        serializer = ProductSerializer(product)
+        print(product)
+        return Response(serializer.data)
+
+
 #! dodawanie nowego
     def post(self, request):
         data = self.request.data
