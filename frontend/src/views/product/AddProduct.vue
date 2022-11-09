@@ -40,9 +40,7 @@
                             <MDBBtn color="primary" block type="submit"> Dodaj </MDBBtn>
                         </div>
 
-                        <div v-if="alert">
-                            <p>pomyslnie dodano !</p>
-                        </div>
+                    
                     </div>
 
                 </form>
@@ -77,6 +75,7 @@ export default {
             image: "",
             imagePreview: "",
             alert: false,
+
         }
     },
     computed: {
@@ -99,7 +98,11 @@ export default {
                 })
                 .then((response) => {
                     console.log(response);
-                    this.alert = true;
+                    //this.$router.push(ViewProduct)
+                   // this.alert = true;
+                    this.$store.commit('setAlert',this.name);
+                    this.$router.push({ name: 'ViewProduct'});
+
                 })
                 .catch((error) => {
                     console.log(error);

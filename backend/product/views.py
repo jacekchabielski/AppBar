@@ -13,6 +13,7 @@ from django.http import Http404
 class ViewProducts(APIView):
     def get(self, request): #! pobieranie wszystkiego
         products = Product.objects.filter(Q(deleted=False)) #! ktore nie sa usuniete (deleted=False)
+        print(products)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
@@ -66,5 +67,16 @@ class ViewProduct(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        
+    def delete(self, request):
+        data = self.request.data
+        id = self.request.data.get('id')  
+        print(id)
+        product = self.get_object(id)
+        product.deleted = True
+        serializer = ProductSerializer(product, data = data, partial=True ) #! serializer wstawia nowe dane
+        if serializer.is_valid():   
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 

@@ -6,7 +6,7 @@ from django.db.models.deletion import CASCADE
 from django.utils.text import slugify
 
 class Product(models.Model):
-    created = models.DateField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True)
     deleted = models.BooleanField(default = False)
     name = models.CharField(max_length = 255)
     description = models.TextField(blank = True)
@@ -16,7 +16,8 @@ class Product(models.Model):
     slug = models.SlugField(max_length = 255, blank = True)
 
     class Meta:
-        ordering = ('-created',) #! odwrocenie segregacji po dacie utworzenia
+        ordering = ('-created',)
+        
 
     def __str__(self):
         return self.name

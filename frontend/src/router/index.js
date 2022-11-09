@@ -24,7 +24,8 @@ const routes = [
     path: '/ViewProduct',  //! url do wszystkich produktow
     name: 'ViewProduct',
     component: ViewProduct, 
-    meta: { requireLogin: true}
+    meta: { requireLogin: true},
+    props: true
   },
   {
     path: '/EditProduct/:id/', //! url do edycji konkretnego produktu

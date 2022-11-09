@@ -1,12 +1,16 @@
 <template>
     <navbar></navbar>
+    <div v-if="alertMessage" class="alert alert-warning alert-dismissible fade show" role="alert">
+        pomyślnie dodano '<b>{{alertMessage}}</b>' -produkt
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
     <MDBTable class="align-middle mb-0 bg-white">
         <thead class="bg-light">
             <tr>
                 <th>Name</th>
                 <th>Description</th>
                 <th>quantity</th>
-                <th>Actions</th>
+                <th colspan="2">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +30,10 @@
                 <td>{{ product.product_quantity }}</td>
                 <td>
                     <MDBBtn color="link" size="sm" rounded > <router-link v-bind:to="'EditProduct'+product.get_absolute_url">Edytuj</router-link> </MDBBtn>
+
+                </td>
+                <td>
+                    <MDBBtn color="danger" size="sm" rounded @click="deleteProduct(product.id)" >usuń {{product.id}}</MDBBtn>
 
                 </td>
             </tr>
@@ -51,13 +59,25 @@ export default {
         MDBBadge,
         Navbar,
     },
+    props: {
+        alert: Boolean
+    },
+    computed: {
+        showAlert(){
+            return this.$store.getters.getAlertStatus
+        }
+    },
     data() {
         return {
-            products: {}
+            products: {},
+            alertMessage: null
         }
     },
     mounted() {             //~ wywołanie metody przy zmontowaniu strony
         this.getProducts();
+        console.log(this.$store.getters);
+        console.log(this.showAlert);
+        this.statusAlert();
     },
     methods: {
         async getProducts() {
@@ -65,11 +85,39 @@ export default {
                 .get('/api/v1/products/') //* get pobierający wszystkie produkty (które nie są usunięte)
                 .then((response) => {
                     this.products = response.data;
+
                 })
                 .catch((error) => {
                     console.log(error);
                 })
         },
+        deleteProduct(id){
+            let formData = new FormData();
+            formData.append('id', id);
+            console.log(id,'to jest to id do usuwania')
+            axios
+                .delete('/api/v1/product/', formData, {
+                        headers: {
+                            Authorization: `Token ${this.$store.state.user.token}`
+                        }
+                    })
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+        },
+
+        statusAlert(){
+            if (this.showAlert){
+                this.alertMessage = this.$store.getters.getMessage;
+                this.$store.commit('consumeAlert');
+                console.log(this.alertMessage);
+
+            }
+        }
     }
+
 };
 </script>

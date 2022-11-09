@@ -9,8 +9,22 @@ export default createStore({
       isAuthenticated: false,
       token: "",
     },
+    showAlert: false,
+    alertMessage: "",
   },
   mutations: {
+    setAlert(state,message){
+      state.showAlert = true
+      state.alertMessage = message
+
+    },
+    consumeAlert(state){
+      let message = state.alertMessage;
+      state.alertMessage = "";
+      state.showAlert = false;
+      return message;
+    },
+
     //! nie mozemy zmienic danych state i robimy to w mutations
     initializeStore(state) {
       //! funkcja inicjalizujaca nasz local storage
@@ -60,6 +74,15 @@ export default createStore({
       localStorage.removeItem("id");
       localStorage.removeItem("token");
     },
+  },
+
+  getters: {
+    getMessage(state){
+      return state.alertMessage;
+    },
+    getAlertStatus(state){
+      return state.showAlert;
+    }
   },
 
   actions: {},
