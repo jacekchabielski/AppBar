@@ -1,9 +1,9 @@
 <template>
     <navbar></navbar>
-    <div v-if="alertMessage" class="alert alert-warning alert-dismissible fade show" role="alert">
-        pomyślnie dodano '<b>{{alertMessage}}</b>' -produkt
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+    <div v-if="alertMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ alertMessage }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="close()"></button>
+    </div>
     <MDBTable class="align-middle mb-0 bg-white">
         <thead class="bg-light">
             <tr>
@@ -29,12 +29,16 @@
                 </td>
                 <td>{{ product.product_quantity }}</td>
                 <td>
-                    <MDBBtn color="link" size="sm" rounded > <router-link v-bind:to="'EditProduct'+product.get_absolute_url">Edytuj</router-link> </MDBBtn>
+                    <MDBBtn color="link" size="sm" rounded>
+                        <router-link v-bind:to="'EditProduct' + product.get_absolute_url">Edytuj</router-link>
+                    </MDBBtn>
 
                 </td>
                 <td>
-                    <MDBBtn color="danger" size="sm" rounded @click="deleteProduct(product.id)" >usuń {{product.id}}</MDBBtn>
-
+                    <MDBBtn type="button" color="danger" size="sm" rounded data-bs-toggle="modal"
+                        @click="deleteProduct(product.id)" data-bs-target="#myModal">
+                        usuń
+                    </MDBBtn>
                 </td>
             </tr>
 
@@ -46,10 +50,16 @@
 <script>
 import axios from "axios";
 import Navbar from "@/components/ui/Navbar.vue";
+import { ref } from 'vue';
 import {
     MDBTable,
     MDBBtn,
     MDBBadge,
+    MDBModal,
+    MDBModalHeader,
+    MDBModalTitle,
+    MDBModalBody,
+    MDBModalFooter,
 } from 'mdb-vue-ui-kit';
 
 export default {
@@ -58,12 +68,17 @@ export default {
         MDBBtn,
         MDBBadge,
         Navbar,
+        MDBModal,
+        MDBModalHeader,
+        MDBModalTitle,
+        MDBModalBody,
+        MDBModalFooter,
     },
     props: {
         alert: Boolean
     },
     computed: {
-        showAlert(){
+        showAlert() {
             return this.$store.getters.getAlertStatus
         }
     },
@@ -71,6 +86,7 @@ export default {
         return {
             products: {},
             alertMessage: null
+
         }
     },
     mounted() {             //~ wywołanie metody przy zmontowaniu strony
@@ -78,6 +94,9 @@ export default {
         console.log(this.$store.getters);
         console.log(this.showAlert);
         this.statusAlert();
+
+
+
     },
     methods: {
         async getProducts() {
@@ -91,31 +110,35 @@ export default {
                     console.log(error);
                 })
         },
-        deleteProduct(id){
-            let formData = new FormData();
-            formData.append('id', id);
-            console.log(id,'to jest to id do usuwania')
+        deleteProduct(id) {
+            //let formData = new FormData();
+            //formData.append('id', id);
+            // console.log(id, 'to jest to id do usuwania')
             axios
-                .delete('/api/v1/product/', formData, {
-                        headers: {
-                            Authorization: `Token ${this.$store.state.user.token}`
-                        }
-                    })
-                    .then((response) => {
-                        console.log(response);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    })
+                .delete(`/api/v1/product/${id}/`, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`
+                    }
+                })
+                .then((response) => {
+                    console.log(response);
+                    location.reload()
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
         },
 
-        statusAlert(){
-            if (this.showAlert){
+        statusAlert() {
+            if (this.showAlert) {
                 this.alertMessage = this.$store.getters.getMessage;
                 this.$store.commit('consumeAlert');
                 console.log(this.alertMessage);
 
             }
+        },
+        close() {
+            alertMessage = "";
         }
     }
 

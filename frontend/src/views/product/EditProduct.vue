@@ -78,35 +78,14 @@
         this.getProduct();
     },
     methods: {
-        submitForm() {
-            let formData = new FormData();
-            const product_id = this.$route.params.id;   //? pobranie id produktu z parametru - URL
-            formData.append('id', product_id);              //? nowe dane 
-            formData.append('name', this.name);
-            formData.append('product_quantity', this.product_quantity);
-            formData.append('description', this.description);
-            axios
-                .put('/api/v1/product/', formData, {
-                    headers: {
-                        Authorization: `Token ${this.$store.state.user.token}`
-                    }
-                })
-                .then((response) => {
-                    console.log(response);
-                    this.alert = true;
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-        },
         getProduct(){
             const product_id = this.$route.params.id;   //? pobranie id produktu z parametru - URL
             console.log(product_id);
             let formData = new FormData();
-            formData.append('id', product_id);
+            //formData.append('id', product_id);
             axios
-                .get('/api/v1/product/', {
-                    params: {id: product_id},
+                .get(`/api/v1/product/${product_id}/`, {
+                    //params: {id: product_id},
                     headers: {
                         Authorization: `Token ${this.$store.state.user.token}`
                     }
@@ -121,7 +100,31 @@
                 .catch((error) => {
                     console.log(error);
                 })
+        },
+        submitForm() {
+            let formData = new FormData();
+            const product_id = this.$route.params.id;   //? pobranie id produktu z parametru - URL              
+            formData.append('name', this.name);
+            formData.append('product_quantity', this.product_quantity);
+            formData.append('description', this.description);
+            axios
+                .put(`/api/v1/product/${product_id}/`, formData, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`
+                    }
+                })
+                .then((response) => {
+                    console.log(response);
+                    //this.alert = true;
+                    this.notification = "pomyslnie edytowano produkt " +this.name;
+                    this.$store.commit('setAlert',this.notification);
+                    this.$router.push({ name: 'ViewProduct'});
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
         }
+        
     }
 };
 </script>

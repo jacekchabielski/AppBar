@@ -75,6 +75,8 @@ export default {
             image: "",
             imagePreview: "",
             alert: false,
+            product_id: 0,
+            notification: ""
 
         }
     },
@@ -91,7 +93,7 @@ export default {
             formData.append('description', this.description);
             formData.append('image', this.image);
             axios
-                .post('/api/v1/product/', formData, {
+                .post(`/api/v1/product/${this.product_id}/`, formData, {
                     headers: {
                         Authorization: `Token ${this.$store.state.user.token}`
                     }
@@ -99,8 +101,10 @@ export default {
                 .then((response) => {
                     console.log(response);
                     //this.$router.push(ViewProduct)
-                   // this.alert = true;
-                    this.$store.commit('setAlert',this.name);
+                   // this.alert = true; 
+                    
+                    this.notification = "pomyslnie dodano produkt " +this.name;
+                    this.$store.commit('setAlert',this.notification);
                     this.$router.push({ name: 'ViewProduct'});
 
                 })
