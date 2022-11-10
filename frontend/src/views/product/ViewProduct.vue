@@ -35,12 +35,36 @@
 
                 </td>
                 <td>
-                    <MDBBtn type="button" color="danger" size="sm" rounded data-bs-toggle="modal"
-                        @click="deleteProduct(product.id)" data-bs-target="#myModal">
-                        usuń
+                    <MDBBtn  type="button" color="danger" size="sm" rounded @Click="setId(product.id)" >
+                        usuń {{product.id}}
                     </MDBBtn>
                 </td>
             </tr>
+            
+            <div class="modal" id="myModal" :class="{'show-modal': actualId}" v-show="actualId" >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Czy na pewno chcesz usunąć ?</h4>
+                            <button type="button" class="btn-close" v-on:click="actualId=null" ></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            usuniesz element
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" v-on:click="deleteProduct(actualId)">Usuń</button>
+                            <button type="button" class="btn margin-left" v-on:click="actualId=null" >powrót</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
         </tbody>
     </MDBTable>
@@ -85,8 +109,8 @@ export default {
     data() {
         return {
             products: {},
-            alertMessage: null
-
+            alertMessage: null,
+            actualId: "",
         }
     },
     mounted() {             //~ wywołanie metody przy zmontowaniu strony
@@ -96,9 +120,12 @@ export default {
         this.statusAlert();
 
 
-
     },
     methods: {
+        setId(id){
+            this.actualId = id;
+            console.log(this.actualId,"dd");
+        },
         async getProducts() {
             axios
                 .get('/api/v1/products/') //* get pobierający wszystkie produkty (które nie są usunięte)
@@ -110,10 +137,8 @@ export default {
                     console.log(error);
                 })
         },
-        deleteProduct(id) {
-            //let formData = new FormData();
-            //formData.append('id', id);
-            // console.log(id, 'to jest to id do usuwania')
+        async deleteProduct(id) {
+            console.log(id,"delete product id");
             axios
                 .delete(`/api/v1/product/${id}/`, {
                     headers: {
@@ -122,6 +147,7 @@ export default {
                 })
                 .then((response) => {
                     console.log(response);
+                    this.actualId = null;
                     location.reload()
                 })
                 .catch((error) => {
@@ -144,3 +170,8 @@ export default {
 
 };
 </script>
+<style>
+    .show-modal {
+        display: block !important;
+    }
+</style>
