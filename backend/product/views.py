@@ -62,8 +62,13 @@ class ViewProduct(APIView):
         #id = self.request.data.get('id')        #* dane produktu
         product = self.get_object(id)           #? Wywołanie metody pobrania produktu ze wskazaniem id (cały obiekt)
         serializer = ProductSerializer(product, data = data, partial=True ) #! serializer wstawia nowe dane
-        if serializer.is_valid():   
-            serializer.save()
+        if serializer.is_valid():
+            product = serializer.save()
+            if 'image' in data:
+                product.image = data['image']
+                product.thumbnail = None
+                product.save()
+
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)

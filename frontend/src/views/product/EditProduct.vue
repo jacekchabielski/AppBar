@@ -16,7 +16,22 @@
                             <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4"
                             v-model="product_quantity" required />
                         </div>
+                        <div class="col-md-6">
+                            <div v-if="imagePreview.length === 0">
+                                <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
+                                    class="rounded-circle" alt="example placeholder" style="width: 200px;" />
+                            </div>
+                            <div v-if="imagePreview.length > 0">
+                                <img :src="imagePreview" alt="zdjecie" class="rounded-circle" style="width:200px;">
+                            </div>
+                            <div>
+                                <div class="btn btn-primary btn-rounded">
+                                    <MDBFile class="form-control d-none" label="zmien"
+                                        @change="handleFileUpload($event)" id="image" accept=".jpg,.jpeg,.png"></MDBFile>
+                                </div>
 
+                            </div>
+                        </div>
                         
                         <div class="row justify-content-center">
                             <div class="col-md-4">
@@ -40,6 +55,7 @@
     import Navbar from "@/components/ui/Navbar.vue";
     import FormData from "form-data";
     import {
+        
         MDBFile,
         MDBTextarea,
         MDBCard,
@@ -64,6 +80,9 @@
             product_quantity: "",
             description: "",
             token: "",
+            image: "",
+            imagePreview: "",
+            imageChanged: false,
         }
     },
 
@@ -80,7 +99,6 @@
     methods: {
         getProduct(){
             const product_id = this.$route.params.id;   //? pobranie id produktu z parametru - URL
-            console.log(product_id);
             let formData = new FormData();
             //formData.append('id', product_id);
             axios
@@ -91,11 +109,12 @@
                     }
                 })
                 .then((response) => {
-                    console.log(response);
                     this.alert = true;
                     this.name = response.data.name;
                     this.description = response.data.description;
                     this.product_quantity = response.data.product_quantity;
+                    this.imagePreview = response.data.get_image;
+                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -107,6 +126,12 @@
             formData.append('name', this.name);
             formData.append('product_quantity', this.product_quantity);
             formData.append('description', this.description);
+            if(this.imageChanged){
+                formData.append('image', this.image);
+            }else{
+                formData.append('image', this.imagePreview.replace('http://127.0.0.1:8000/media/',''));
+            }
+            
             axios
                 .put(`/api/v1/product/${product_id}/`, formData, {
                     headers: {
@@ -114,7 +139,6 @@
                     }
                 })
                 .then((response) => {
-                    console.log(response);
                     //this.alert = true;
                     this.notification = "pomyslnie edytowano produkt " +this.name;
                     this.$store.commit('setAlert',this.notification);
@@ -123,6 +147,19 @@
                 .catch((error) => {
                     console.log(error);
                 })
+        },
+        handleFileUpload(event) {
+            var input = event.target;
+            if (input.files && input.files[0]) { //! jesli mamy plik
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imagePreview = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]); //base 64
+                
+            }
+            this.image = event.target.files[0];
+            this.imageChanged = true ;
         }
         
     }
