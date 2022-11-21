@@ -4,6 +4,7 @@ from PIL import Image
 from django.core.files import File
 from django.db.models.deletion import CASCADE
 from django.utils.text import slugify
+from product_category.models import Product_category
 
 class Product(models.Model):
     created = models.DateTimeField(auto_now_add = True)
@@ -14,7 +15,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to = 'uploads/', blank = True, null = True)
     thumbnail = models.ImageField(upload_to = 'uploads/', blank = True, null = True)
     slug = models.SlugField(max_length = 255, blank = True)
-
+    Product_category = models.ForeignKey(Product_category, on_delete=CASCADE, related_name='product_category', blank=True)
+    
     class Meta:
         ordering = ('-created',)
         

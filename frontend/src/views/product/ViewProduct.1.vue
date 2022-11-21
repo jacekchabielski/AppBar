@@ -16,7 +16,7 @@
                         Category
                     </MDBDropdownToggle>
                     <MDBDropdownMenu dark aria-labelledby="dropdownMenuButton" class="mt-2">
-                    <MDBDropdownItem tag="button" v-for="category in productCategories" @click="getProductsByCategory(category)">{{category}}</MDBDropdownItem>
+                    <MDBDropdownItem tag="button" v-for="category in productCategories" >{{category}}</MDBDropdownItem>
                     </MDBDropdownMenu>
                     </div>
                 </MDBDropdown>
@@ -176,9 +176,6 @@ export default {
             this.actualId = id;
             console.log(this.actualId, "dd");
         },
-        getProductsByCategory(categoryName) {
-            console.log(categoryName);
-        },
         async getProducts() {
             axios
                 .get("/api/v1/products/") //* get pobierający wszystkie produkty (które nie są usunięte)
@@ -218,7 +215,6 @@ export default {
                 .then((response) => {
                     console.log(response,'response z getproductcategory');
                     this.productCategories = response.data;
-                    console.log(this.productCategories);
                 })
                 .catch((error) => {
                     console.log(error);
