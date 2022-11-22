@@ -15,6 +15,13 @@
                                 rows="4" required />
                             <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4"
                             v-model="product_quantity" required />
+
+                            <p>wybierz kategorie</p>
+                                <select class="form-select" id="idCategory" aria-label="Default select example" required>
+                                    <template v-for="productCategory in productCategories" v-bind:key="productCategory.id">
+                                        <option :value="productCategory.id" :selected="productCategory === selectedCategory">{{productCategory}}</option>
+                                    </template>
+                                </select>
                         </div>
                         <div class="col-md-6">
                             <div v-if="imagePreview.length === 0">
@@ -34,7 +41,7 @@
                         </div>
                         
                         <div class="row justify-content-center">
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-3">
                                 <MDBBtn color="warning" block type="submit"> zapisz edycje </MDBBtn>
                             </div>
     
@@ -83,6 +90,8 @@
             image: "",
             imagePreview: "",
             imageChanged: false,
+            productCategories: [],
+            selectedCategory: "",
         }
     },
 
@@ -95,6 +104,7 @@
     mounted(){
         const product_id = this.$route.params.id;   //? pobranie id produktu z parametru - URL
         this.getProduct();
+        this.getProductCategory();
     },
     methods: {
         getProduct(){
@@ -114,6 +124,7 @@
                     this.description = response.data.description;
                     this.product_quantity = response.data.product_quantity;
                     this.imagePreview = response.data.get_image;
+                    this.selectedCategory = response.data.Product_category_name;
                     console.log(response.data);
                 })
                 .catch((error) => {
@@ -126,6 +137,10 @@
             formData.append('name', this.name);
             formData.append('product_quantity', this.product_quantity);
             formData.append('description', this.description);
+            var select = document.getElementById('idCategory');
+            var selectCategoryValue = select.options[select.selectedIndex].value ;
+            console.log(selectCategoryValue, 'select category value');
+            formData.append('Product_category', selectCategoryValue);
             if(this.imageChanged){
                 formData.append('image', this.image);
             }else{
@@ -160,7 +175,19 @@
             }
             this.image = event.target.files[0];
             this.imageChanged = true ;
-        }
+        },
+        async getProductCategory(){
+            axios
+                .get("/api/v1/productCategory/")
+                .then((response) => {
+                    console.log(response,'response z getproductcategory');
+                    this.productCategories = response.data;
+                    console.log(this.productCategories, 'nazwy kategorii');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         
     }
 };

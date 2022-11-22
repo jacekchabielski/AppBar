@@ -14,7 +14,10 @@
                                 rows="4" required />
                             <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4"
                                 v-model="product_quantity" required />
-
+                                <p>wybierz kategorie</p>
+                                <select class="form-select" id="idCategory" aria-label="Default select example" required>
+                                    <option v-for="productCategory in productCategories" v-bind:key="productCategory.id" :value="productCategory.id">{{productCategory}}</option>
+                                </select>
                         </div>
 
 
@@ -36,7 +39,7 @@
                         </div>
                     </div>
                     <div class="row justify-content-center">
-                        <div class="col-md-4">
+                        <div class="col-md-4 mt-2">
                             <MDBBtn color="primary" block type="submit"> Dodaj </MDBBtn>
                         </div>
 
@@ -76,7 +79,8 @@ export default {
             imagePreview: "",
             alert: false,
             product_id: 0,
-            notification: ""
+            notification: "",
+            productCategories: [],
 
         }
     },
@@ -85,6 +89,9 @@ export default {
             return this.$store.state.token;
         }
     },
+    mounted() {
+        this.getProductCategory();
+    },
     methods: {
         submitForm() {
             let formData = new FormData();
@@ -92,17 +99,20 @@ export default {
             formData.append('product_quantity', this.product_quantity);
             formData.append('description', this.description);
             formData.append('image', this.image);
+            //console.log(this.image, "consol log zdjecia")
+            var select = document.getElementById('idCategory');
+            var selectCategoryValue = select.options[select.selectedIndex].value ;
+            console.log(selectCategoryValue, 'select category value');
+            formData.append('Product_category', selectCategoryValue);
             axios
                 .post(`/api/v1/product/${this.product_id}/`, formData, {
                     headers: {
-                        Authorization: `Token ${this.$store.state.user.token}`
+                        Authorization: `Token ${this.$store.state.user.token}`,
+                        
                     }
                 })
                 .then((response) => {
                     console.log(response);
-                    //this.$router.push(ViewProduct)
-                   // this.alert = true; 
-                    
                     this.notification = "pomyslnie dodano produkt " +this.name;
                     this.$store.commit('setAlert',this.notification);
                     this.$router.push({ name: 'ViewProduct'});
@@ -123,9 +133,22 @@ export default {
 
             }
             this.image = event.target.files[0];
-        }
+        },
 
+        async getProductCategory(){
+            axios
+                .get("/api/v1/productCategory/")
+                .then((response) => {
+                    console.log(response,'response z getproductcategory');
+                    this.productCategories = response.data;
+                    console.log(this.productCategories, 'nazwy kategorii');
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     },
+    
 
 };
 </script>

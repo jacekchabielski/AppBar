@@ -12,10 +12,11 @@
             <MDBCol>
                 <MDBDropdown class="nav-item" v-model="dropdown1">
                     <div>
-                    <MDBDropdownToggle tag="a" @click="dropdown1 = !dropdown1" class="h2 link-dark ">
-                        Category
-                    </MDBDropdownToggle>
+                    <MDBDropdownToggle tag="a" @click="dropdown1 = !dropdown1" class="h2 link-dark "> Category </MDBDropdownToggle>
+                        
                     <MDBDropdownMenu dark aria-labelledby="dropdownMenuButton" class="mt-2">
+                    <MDBDropdownItem tag="button"  @click="getProductsByCategory('Wszystkie kategorie')">Wszystkie Kategorie</MDBDropdownItem>
+                    <MDBDropdownItem divider />
                     <MDBDropdownItem tag="button" v-for="category in productCategories" @click="getProductsByCategory(category)">{{category}}</MDBDropdownItem>
                     </MDBDropdownMenu>
                     </div>
@@ -35,7 +36,7 @@
 
         <template v-for="(product, index) in products" v-bind:key="product.id">
             <MDBRow @click="collapseList[index] = !collapseList[index]" class="border-bottom pb-3">
-                <MDBCol class="col-3">
+                <MDBCol>
                     <div class="d-flex align-items-center">
                         <img v-bind:src="product.get_thumbnail" class="rounded-circle image"
                             :class="{ 'image-large': collapseList[index] }" />
@@ -44,14 +45,16 @@
                         </div>
                     </div>
                 </MDBCol>
-                <MDBCol class="col-3 d-flex align-items-center justify-content-center">
-                    <p class="fw-normal mb-1" :class="{ 'text-truncate': !collapseList[index] }">
+                <MDBCol class="d-flex align-items-center justify-content-center"> {{ product.Product_category_name}}</MDBCol>
+                <MDBCol class="d-flex align-items-center justify-content-center" >
+                    <p style="max-width: 250px;" class="fw-normal mb-1" :class="{ 'text-truncate': !collapseList[index]  }" >
                         {{ product.description }}
                     </p>
                 </MDBCol>
-                <MDBCol class="col-3 d-flex align-items-center justify-content-center">{{ product.product_quantity }}
+                
+                <MDBCol class=" d-flex align-items-center justify-content-center">{{ product.product_quantity }}
                 </MDBCol>
-                <MDBCol class="col-3 d-flex align-items-center justify-content-center gap-1"
+                <MDBCol class=" d-flex align-items-center justify-content-center gap-1"
                     :class="{ 'align-items-start': !collapseList[index] }">
                     <MDBBtn color="link" size="sm" rounded>
                         <router-link v-bind:to="'EditProduct' + product.get_absolute_url">Edytuj</router-link>
@@ -176,9 +179,9 @@ export default {
             this.actualId = id;
             console.log(this.actualId, "dd");
         },
-        getProductsByCategory(categoryName) {
-            console.log(categoryName);
-        },
+
+
+///////////////////////////////////// POBIERANIE WSZYSTKICH PRODUKTÓW /////////////////////////////////////////////////////////////
         async getProducts() {
             axios
                 .get("/api/v1/products/") //* get pobierający wszystkie produkty (które nie są usunięte)
@@ -194,6 +197,20 @@ export default {
                     console.log(error);
                 });
         },
+/////////////////////////////////////////// POBIERANIE PRODUKTU PO WYBRANEJ KATEGORII /////////////////////////////////////////////////////////////
+        async getProductsByCategory(category){
+            axios
+                .get(`/api/v1/products/${category}/`)
+                .then((response) => {
+                    console.log(response, "respons po kategorii");
+                    this.products = response.data;
+                    
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+///////////////////////////////////// USUWANIE PRODUKTU /////////////////////////////////////////////////////////////
         async deleteProduct(id) {
             console.log(id, "delete product id");
             axios
@@ -211,7 +228,7 @@ export default {
                     console.log(error);
                 });
         },
-
+///////////////////////////////////// POBIERANIE SAMEJ KATEGORII PRODUKTU /////////////////////////////////////////////////////////////
         async getProductCategory(){
             axios
                 .get("/api/v1/productCategory/")
