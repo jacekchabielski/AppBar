@@ -9,24 +9,59 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from product_category.models import Product_category
+from django.core.paginator import Paginator
 
 #! WYŚWIETLANIE WSZYSTKICH PRODUKTÓW
 class ViewProducts(APIView):
     def get(self, request): #! pobieranie wszystkiego
-        products = Product.objects.filter(Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
-        #print(products)
-        serializer = ProductSerializer(products, many = True)
-        return Response(serializer.data)
-
-#! WYŚWIETLANIE PRODUKTU PO KATEGORII
-class ViewProductsByCategory(APIView):
-    def get(self, request, category):
+        page_number = self.request.query_params.get('page_number', 1)                               #? numer aktualnej strony (aktualnie pierwsza)
+        page_size = self.request.query_params.get('page_size', 5)                                   #? ilość elementów na stronie (aktualnie 5)
+        products = Product.objects.filter(Q(deleted = False))                                       #? ktore nie sa usuniete (deleted=False)
+        category = self.request.query_params.get('category', '')
+            #? ilość elementów na stronie (aktualnie 5)
+        print(category)
         if category != '' and category != 'Wszystkie kategorie':
-            products = Product.objects.filter(Q(Product_category__name__icontains = category) & Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
-        if category != '' and category == 'Wszystkie kategorie':
+            products = Product.objects.filter(Q(Product_category__name__icontains = category) & Q(deleted = False)) #? ktore nie sa usuniete (deleted=False)
+        else:
             products = Product.objects.filter(Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
-        serializer = ProductSerializer(products, many = True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        paginator = Paginator(products, page_size)
+        print(products, 'to powinno printowac produkty')
+        serializer = ProductSerializer(paginator.page(page_number), many = True)
+        data = {}
+        print(serializer.data)
+        print(paginator.num_pages, 'liczba stron')
+        data['products'] = serializer.data
+        data['page_numbers'] = paginator.num_pages                                                  #? ile bedzie razem podstron
+        data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
+        return Response(data)
+
+# #! WYŚWIETLANIE PRODUKTU PO KATEGORII
+# class ViewProductsByCategory(APIView):
+#     def get(self, request, category):
+#         page_number = self.request.query_params.get('page_number', 1)                               #? numer aktualnej strony (aktualnie pierwsza)
+#         page_size = self.request.query_params.get('page_size', 5)
+#         category = self.request.query_params.get('category', '')
+#             #? ilość elementów na stronie (aktualnie 5)
+#         if category != '' and category != 'Wszystkie kategorie':
+#             products = Product.objects.filter(Q(Product_category__name__icontains = category) & Q(deleted = False)) #? ktore nie sa usuniete (deleted=False)
+#         if category != '' and category == 'Wszystkie kategorie':
+#             products = Product.objects.filter(Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
+#         paginator = Paginator(products, page_size)
+#         #print(products)
+#         serializer = ProductSerializer(paginator.page(page_number), many = True)
+#         data = {}
+#         data['products'] = serializer.data
+#         data['page_numbers'] = paginator.num_pages                                                  #? ile bedzie razem podstron
+#         data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
+#         return Response(data, status=status.HTTP_200_OK)
+
+        
+#         # if category != '' and category != 'Wszystkie kategorie':
+#         #     products = Product.objects.filter(Q(Product_category__name__icontains = category) & Q(deleted = False)) #? ktore nie sa usuniete (deleted=False)
+#         # if category != '' and category == 'Wszystkie kategorie':
+#         #     products = Product.objects.filter(Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
+#         # serializer = ProductSerializer(products, many = True)
+#         # return Response(data, status=status.HTTP_200_OK)
 
 #! WYSWIETLANIE POSZCZEGÓLNEGO PRODUKTU 
 class ViewProduct(APIView):
@@ -74,7 +109,10 @@ class ViewProduct(APIView):
         category_name = data.get('Product_category')
         productCategory = Product_category.objects.get( name = category_name ).id
         print(data, 'przed')
+        _mutable = data._mutable                                                                                         #* zezwolenie na modyfikowanie data
+        data._mutable = True
         data['Product_category'] = productCategory
+        data._mutable = _mutable
         print(data, 'po')
         serializer = ProductSerializer(product, data = data, partial=True ) #! serializer wstawia nowe dane
         if serializer.is_valid():

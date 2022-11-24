@@ -10,7 +10,7 @@
       <MDBNavbarItem to="/addProduct" >
         Dodaj produkt
       </MDBNavbarItem>
-      <MDBNavbarItem to="/ViewProduct" >
+      <MDBNavbarItem to="/ViewProduct/1/" >
         Wyswietl produkty
       </MDBNavbarItem>
       

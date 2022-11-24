@@ -21,7 +21,7 @@ const routes = [
     meta: { requireLogin: true}
   },
   {
-    path: '/ViewProduct',  //! url do wszystkich produktow
+    path: '/ViewProduct/:page_number',  //! url do wszystkich produktow
     name: 'ViewProduct',
     component: ViewProduct, 
     meta: { requireLogin: true},

@@ -157,7 +157,7 @@
                     //this.alert = true;
                     this.notification = "pomyslnie edytowano produkt " +this.name;
                     this.$store.commit('setAlert',this.notification);
-                    this.$router.push({ name: 'ViewProduct'});
+                    this.$router.push({ path: '/ViewProduct/1/'});
                 })
                 .catch((error) => {
                     console.log(error);

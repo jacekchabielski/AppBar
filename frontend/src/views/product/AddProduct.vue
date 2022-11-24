@@ -115,7 +115,7 @@ export default {
                     console.log(response);
                     this.notification = "pomyslnie dodano produkt " +this.name;
                     this.$store.commit('setAlert',this.notification);
-                    this.$router.push({ name: 'ViewProduct'});
+                    this.$router.push({ path: '/ViewProduct/1/'});
 
                 })
                 .catch((error) => {
@@ -138,10 +138,8 @@ export default {
         async getProductCategory(){
             axios
                 .get("/api/v1/productCategory/")
-                .then((response) => {
-                    console.log(response,'response z getproductcategory');
+                .then((response) => { 
                     this.productCategories = response.data;
-                    console.log(this.productCategories, 'nazwy kategorii');
                 })
                 .catch((error) => {
                     console.log(error);
