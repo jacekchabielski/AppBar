@@ -7,13 +7,32 @@
   </MDBNavbarToggler>
   <MDBCollapse v-model="collapse1" id="navbarSupportedContent">
     <MDBNavbarNav center class="mb-2 mb-lg-0">
-      <MDBNavbarItem to="/addProduct" >
-        Dodaj produkt
+    
+      <MDBNavbarItem>
+        <!-- Navbar dropdown produkty -->
+        <MDBDropdown class="nav-item" v-model="dropdown3">  
+          <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown3 = !dropdown3">
+          Produkty
+          </MDBDropdownToggle>
+          <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
+            <MDBDropdownItem href="/addProduct">Dodaj produkt</MDBDropdownItem>
+
+            <MDBDropdownItem href="/ViewProduct/1/">Wyswietl produkty</MDBDropdownItem>
+          </MDBDropdownMenu>
+        </MDBDropdown>
       </MDBNavbarItem>
-      <MDBNavbarItem to="/ViewProduct/1/" >
-        Wyswietl produkty
+      <MDBNavbarItem>
+        <!-- Navbar dropdown przepis -->
+        <MDBDropdown class="nav-item" v-model="dropdown2">  
+          <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown2 = !dropdown2">
+          Przepisy
+          </MDBDropdownToggle>
+          <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
+            <MDBDropdownItem href="/AddRecipe">Dodaj przepis</MDBDropdownItem>
+            <MDBDropdownItem href="/ViewRecipe/1/">Wyświetl przepisy</MDBDropdownItem>
+          </MDBDropdownMenu>
+        </MDBDropdown>
       </MDBNavbarItem>
-      
       <MDBNavbarNav right>
       <MDBNavbarItem>
         <!-- Navbar dropdown -->
@@ -91,10 +110,14 @@ data(){
 
     const collapse1 = ref(false);   //metody aby animacje działały
     const dropdown1 = ref(false);
+    const dropdown2 = ref(false);
+    const dropdown3 = ref(false);
 
     return {
       collapse1,
-      dropdown1
+      dropdown1,
+      dropdown2,
+      dropdown3,
     }
     
   },

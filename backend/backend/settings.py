@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'djoser',
     'product',
     'product_category',
+    'recipe',
+    'recipe_category',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",

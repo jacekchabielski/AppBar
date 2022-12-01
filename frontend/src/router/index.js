@@ -7,6 +7,8 @@ import Logout from '../views/account/Logout.vue'
 import AddProduct from '../views/product/AddProduct.vue'
 import ViewProduct from '../views/product/ViewProduct.vue'
 import EditProduct from '../views/product/EditProduct.vue'
+import ViewRecipe from '../views/recipe/ViewRecipe.vue'
+import AddRecipe from '../views/recipe/AddRecipe.vue'
 const routes = [
   {
     path: '/',
@@ -31,6 +33,19 @@ const routes = [
     path: '/EditProduct/:id/', //! url do edycji konkretnego produktu
     name: 'EditProduct',
     component: EditProduct, 
+    meta: { requireLogin: true}
+  },
+
+  {
+    path: '/ViewRecipe/:page_number',
+    name: 'ViewRecipe',
+    component: ViewRecipe, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/AddRecipe',
+    name: 'AddRecipe',
+    component: AddRecipe, 
     meta: { requireLogin: true}
   },
   {

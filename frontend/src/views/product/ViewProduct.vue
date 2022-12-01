@@ -108,6 +108,9 @@
         </ul>
     </nav>
 <!--~~~~~~~~~~PAGINACJA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+  
 </template>
 
 <script>
@@ -163,13 +166,15 @@ export default {
         MDBAccordion,
         MDBAccordionItem,
     },
+    
     setup() {
         const collapse1 = ref(false);
         const dropdown1 = ref(false);
+        const dropdown2 = ref(false);
         return {
             collapse1,
             dropdown1,
-
+            dropdown2,
         };
     },
     props: {
