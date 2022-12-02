@@ -29,4 +29,14 @@ class ViewRecipes(APIView):
         data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
         return Response(data)
 
-    
+class ViewRecipe(APIView):
+    def get(self,request, id):
+        recipe = self.get_object(id)
+        serializer = RecipeSerializer(recipe)
+        return Response(serializer.data)
+
+    def get_object(self, recipe_id):
+        try:
+            return Recipe.objects.get(id = recipe_id)
+        except Recipe.DoesNotExist:
+            raise Http404

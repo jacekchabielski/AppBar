@@ -9,6 +9,7 @@ import ViewProduct from '../views/product/ViewProduct.vue'
 import EditProduct from '../views/product/EditProduct.vue'
 import ViewRecipe from '../views/recipe/ViewRecipe.vue'
 import AddRecipe from '../views/recipe/AddRecipe.vue'
+import ViewRecipeDetails from '../views/recipe/ViewRecipeDetails.vue'
 const routes = [
   {
     path: '/',
@@ -35,7 +36,6 @@ const routes = [
     component: EditProduct, 
     meta: { requireLogin: true}
   },
-
   {
     path: '/ViewRecipe/:page_number',
     name: 'ViewRecipe',
@@ -46,6 +46,12 @@ const routes = [
     path: '/AddRecipe',
     name: 'AddRecipe',
     component: AddRecipe, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/ViewRecipeDetails/:id/', //! url do szczegółów konkretnego przepisu
+    name: 'ViewRecipeDetails',
+    component: ViewRecipeDetails, 
     meta: { requireLogin: true}
   },
   {

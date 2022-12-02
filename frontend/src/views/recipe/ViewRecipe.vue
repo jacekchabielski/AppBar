@@ -1,14 +1,11 @@
-<template>
+<template >
     <navbar></navbar>
     <div v-if="alertMessage" class="alert alert-success alert-dismissible fade show" role="alert">
         {{ alertMessage }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="close()"></button>
     </div>
-    <MDBContainer fluid>
-        <MDBRow class="mb-4">
-            <MDBCol>
-                <h2>Nazwa</h2>
-            </MDBCol>
+    <MDBContainer style="font-family: 'Molle',cursive;" >
+        <MDBRow  class="mb-4">
             <MDBCol>
                 <MDBDropdown class="nav-item" v-model="dropdown1">
                     <div>
@@ -25,20 +22,11 @@
                     </div>
                 </MDBDropdown>
             </MDBCol>
-            <MDBCol>
-                <h2>Opis</h2>
-            </MDBCol>
-            <MDBCol>
-                <h2>Ilość</h2>
-            </MDBCol>
-            <MDBCol>
-                <h2>Akcje</h2>
-            </MDBCol>
 
         </MDBRow>
-        <MDBRow>
-        <template v-for="(recipe, index) in recipes.recipes" v-bind:key="recipe.id">
-            <!-- 
+        <MDBRow :cols="['1','md-3']" class="g-4">
+            <template v-for="(recipe, index) in recipes.recipes" v-bind:key="recipe.id">
+                <!-- 
             <MDBRow @click="collapseList[index] = !collapseList[index]" class="border-bottom pb-3">
                 <MDBCol>
                     <div class="d-flex align-items-center">
@@ -68,28 +56,29 @@
                     </MDBBtn>
                 </MDBCol>
             </MDBRow>
-            -->     
- <!--  KARTA  -->
-                <MDBCol col="4"> 
-                    <MDBCard class="w-50">
+            -->
+            
+            
+            
+                <!--  KARTA  -->
+            
+                <MDBCol>
+                    <MDBCard text="dark" bg-silver style="width: 20rem;" >
                         <a v-mdb-ripple="{ color: 'light' }">
-                            <MDBCardImg v-bind:src="recipe.get_thumbnail" top alt="..." />
+                            <MDBCardImg v-bind:src="recipe.get_thumbnail" style="width: 100%; height: 12vw; object-fit: cover;"  class="img-fluid zoom" top alt="..." />
                         </a>
                         <MDBCardBody>
-                            <MDBCardTitle>{{recipe.name}}</MDBCardTitle>
+                            <MDBCardTitle>{{ recipe.name }}</MDBCardTitle>
                             <MDBCardText>
-                                {{recipe.description}}
+                                {{ recipe.description }}
                             </MDBCardText>
-                            <MDBBtn tag="a" href="#!" color="primary">Więcej..</MDBBtn>
-                            <MDBBtn tag="a" href="#!" color="danger">usun</MDBBtn>
-                            <MDBBtn tag="a" href="#!" color="warning">edytuj</MDBBtn>
+                            <MDBBtn tag="a" :href="'/ViewRecipeDetails' + recipe.get_absolute_url" color="primary">Więcej..</MDBBtn>
                         </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
             
-            
-        </template>
-    </MDBRow>
+            </template>
+        </MDBRow>
     </MDBContainer>
 
     <div class="modal" id="myModal" :class="{ 'show-modal': actualId }" v-show="actualId">
@@ -120,7 +109,7 @@
 
     <!--~~~~~~~~~~PAGINACJA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <nav v-if="recipes.recipes != ''" aria-label="pagination" class="pagination justify-content-center"
-        style="margin: 20px 0">
+        style="margin: 20px 0; font-family: 'Molle', cursive;" >
         <ul class="pagination">
             <li class="page-item" v-if="parseInt(this.$route.params.page_number) > 1">
                 <a class="page-link"
@@ -206,7 +195,7 @@ export default {
         MDBCardTitle,
         MDBCardText,
         MDBCardImg,
-        
+
     },
     directives: {
         mdbRipple
@@ -237,7 +226,7 @@ export default {
             actualId: "",
             collapseList: [],
             recipeCategories: [],
-            page_size: 3,
+            page_size: 6,
             activeClass: "active",
             activeCategory: ''
         };
@@ -345,10 +334,24 @@ export default {
         },
     },
 };
+
 </script>
 <style>
-.show-modal {
+.zoom {
+    transition: transform .2s; /* Animation */
+    margin: 0 auto;
+}
+
+.zoom:hover{
+    transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+.show-modal{
     display: block !important;
+}
+
+.card:hover{
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
 }
 
 .image {
