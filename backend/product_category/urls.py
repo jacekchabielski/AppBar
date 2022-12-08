@@ -4,5 +4,5 @@ from product_category import views
 
 
 urlpatterns = [
-    path('productCategory/', views.GetProductCategories.as_view()), #! zwraca produkt
+    path('productCategory/', views.GetProductCategories.as_view()), #! zwraca kategorie produktu
 ]

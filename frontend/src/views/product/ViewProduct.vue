@@ -12,13 +12,16 @@
             <MDBCol>
                 <MDBDropdown class="nav-item" v-model="dropdown1">
                     <div>
-                    <MDBDropdownToggle tag="a" @click="dropdown1 = !dropdown1" class="h2 link-dark "> Kategorie </MDBDropdownToggle>
-                        
-                    <MDBDropdownMenu dark aria-labelledby="dropdownMenuButton" class="mt-2">
-                    <MDBDropdownItem tag="button"  @click="getProductsByCategory('Wszystkie kategorie')">Wszystkie Kategorie</MDBDropdownItem>
-                    <MDBDropdownItem divider />
-                    <MDBDropdownItem tag="button" v-for="category in productCategories" @click="getProductsByCategory(category)">{{category}}</MDBDropdownItem>
-                    </MDBDropdownMenu>
+                        <MDBDropdownToggle tag="a" @click="dropdown1 = !dropdown1" class="h2 link-dark "> Kategorie
+                        </MDBDropdownToggle>
+
+                        <MDBDropdownMenu dark aria-labelledby="dropdownMenuButton" class="mt-2">
+                            <MDBDropdownItem tag="button" @click="getProductsByCategory('Wszystkie kategorie')">
+                                Wszystkie Kategorie</MDBDropdownItem>
+                            <MDBDropdownItem divider />
+                            <MDBDropdownItem tag="button" v-for="category in productCategories"
+                                @click="getProductsByCategory(category)">{{ category }}</MDBDropdownItem>
+                        </MDBDropdownMenu>
                     </div>
                 </MDBDropdown>
             </MDBCol>
@@ -31,7 +34,17 @@
             <MDBCol>
                 <h2>Akcje</h2>
             </MDBCol>
-            
+            <MDBCol>
+                <form @submit.prevent="searchForm">
+                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Search"
+                        aria-label="Search">
+                        <MDBBtn color="primary" type="submit">
+                            <MDBIcon icon="search" />
+                        </MDBBtn>
+                    </MDBInput>
+                </form>
+            </MDBCol>
+
         </MDBRow>
 
         <template v-for="(product, index) in products.products" v-bind:key="product.id">
@@ -45,13 +58,15 @@
                         </div>
                     </div>
                 </MDBCol>
-                <MDBCol class="d-flex align-items-center justify-content-center"> {{ product.Product_category_name}}</MDBCol>
-                <MDBCol class="d-flex align-items-center justify-content-center" >
-                    <p style="max-width: 250px;" class="fw-normal mb-1" :class="{ 'text-truncate': !collapseList[index]  }" >
+                <MDBCol class="d-flex align-items-center justify-content-center"> {{ product.Product_category_name }}
+                </MDBCol>
+                <MDBCol class="d-flex align-items-center justify-content-center">
+                    <p style="max-width: 250px;" class="fw-normal mb-1"
+                        :class="{ 'text-truncate': !collapseList[index] }">
                         {{ product.description }}
                     </p>
                 </MDBCol>
-                
+
                 <MDBCol class=" d-flex align-items-center justify-content-center">{{ product.product_quantity }}
                 </MDBCol>
                 <MDBCol class=" d-flex align-items-center justify-content-center gap-1"
@@ -91,26 +106,30 @@
             </div>
         </div>
     </div>
-    
+
 
     <!--~~~~~~~~~~PAGINACJA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <nav v-if="products.products!=''" aria-label="pagination"  class="pagination justify-content-center" style="margin: 20px 0">
+    <nav v-if="products.products != ''" aria-label="pagination" class="pagination justify-content-center"
+        style="margin: 20px 0">
         <ul class="pagination">
             <li class="page-item" v-if="parseInt(this.$route.params.page_number) > 1">
-            <a class="page-link" :href="'/ViewProduct/' + (parseInt(this.$route.params.page_number) - 1) + '/'">Poprzednia</a>
+                <a class="page-link"
+                    :href="'/ViewProduct/' + (parseInt(this.$route.params.page_number) - 1) + '/'">Poprzednia</a>
             </li>
-            <li v-for="page in products.page_numbers" v-bind:class="[pageItemClass, page === parseInt(this.$route.params.page_number) ? activeClass : '',]">
-            <a class="page-link" :href="'/ViewProduct/' + page + '/'">{{ page }}</a>
+            <li v-for="page in products.page_numbers"
+                v-bind:class="[pageItemClass, page === parseInt(this.$route.params.page_number) ? activeClass : '',]">
+                <a class="page-link" :href="'/ViewProduct/' + page + '/'">{{ page }}</a>
             </li>
             <li class="page-item" v-if="products.next_page">
-            <a class="page-link" :href="'/ViewProduct/' + (parseInt(this.$route.params.page_number) + 1) + '/'">Następna</a>
+                <a class="page-link"
+                    :href="'/ViewProduct/' + (parseInt(this.$route.params.page_number) + 1) + '/'">Następna</a>
             </li>
         </ul>
     </nav>
-<!--~~~~~~~~~~PAGINACJA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!--~~~~~~~~~~PAGINACJA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
 
-  
+
 </template>
 
 <script>
@@ -121,9 +140,9 @@ import {
     MDBPagination,
     MDBPageNav,
     MDBPageItem,
-    MDBDropdown, 
-    MDBDropdownToggle, 
-    MDBDropdownMenu, 
+    MDBDropdown,
+    MDBDropdownToggle,
+    MDBDropdownMenu,
     MDBDropdownItem,
     MDBCol,
     MDBRow,
@@ -139,6 +158,8 @@ import {
     MDBModalFooter,
     MDBAccordion,
     MDBAccordionItem,
+    MDBIcon,
+    MDBInput,
 } from "mdb-vue-ui-kit";
 
 export default {
@@ -146,9 +167,9 @@ export default {
         MDBPagination,
         MDBPageNav,
         MDBPageItem,
-        MDBDropdown, 
-        MDBDropdownToggle, 
-        MDBDropdownMenu, 
+        MDBDropdown,
+        MDBDropdownToggle,
+        MDBDropdownMenu,
         MDBDropdownItem,
         MDBCol,
         MDBRow,
@@ -165,16 +186,20 @@ export default {
         MDBModalFooter,
         MDBAccordion,
         MDBAccordionItem,
+        MDBIcon,
+        MDBInput,
     },
-    
+
     setup() {
         const collapse1 = ref(false);
         const dropdown1 = ref(false);
         const dropdown2 = ref(false);
+        const search2 = ref('');
         return {
             collapse1,
             dropdown1,
             dropdown2,
+            search2,
         };
     },
     props: {
@@ -194,7 +219,8 @@ export default {
             productCategories: [],
             page_size: 6,
             activeClass: "active",
-            activeCategory: ''
+            activeCategory: '',
+            query: ""
         };
     },
     mounted() {
@@ -204,7 +230,7 @@ export default {
         console.log(this.showAlert);
         this.statusAlert();
         this.getProductCategory();
-        
+
     },
     methods: {
 
@@ -214,19 +240,21 @@ export default {
             console.log(this.actualId, "dd");
         },
 
-
-///////////////////////////////////// POBIERANIE WSZYSTKICH PRODUKTÓW /////////////////////////////////////////////////////////////
+        async searchForm() {
+            console.log(this.query);
+        },
+        ///////////////////////////////////// POBIERANIE WSZYSTKICH PRODUKTÓW /////////////////////////////////////////////////////////////
         async getProducts() {
             const storedCategory = localStorage.getItem('category');
-            if(storedCategory) {
+            if (storedCategory) {
                 this.activeCategory = storedCategory;
             } else {
-                this.activeCategory = '';                
+                this.activeCategory = '';
             }
             axios
                 .get(`/api/v1/products/?page_number=${this.$route.params.page_number}&page_size=${this.page_size}&category=${this.activeCategory}`) //* get pobierający wszystkie produkty (które nie są usunięte)
                 .then((response) => {
-                    console.log(response,"respons wszystkiego");
+                    console.log(response, "respons wszystkiego");
                     this.products = response.data;
                     this.collapseList = [];
                     for (product in this.products) {
@@ -237,8 +265,8 @@ export default {
                     console.log(error);
                 });
         },
-/////////////////////////////////////////// POBIERANIE PRODUKTU PO WYBRANEJ KATEGORII /////////////////////////////////////////////////////////////
-        async getProductsByCategory(category){
+        /////////////////////////////////////////// POBIERANIE PRODUKTU PO WYBRANEJ KATEGORII /////////////////////////////////////////////////////////////
+        async getProductsByCategory(category) {
             localStorage.setItem('category', category);
             this.activeCategory = category;
             axios
@@ -247,13 +275,13 @@ export default {
                 .then((response) => {
                     console.log(response, "respons po kategorii");
                     this.products = response.data;
-                    this.$router.push({ path: '/ViewProduct/1/'});
+                    this.$router.push({ path: '/ViewProduct/1/' });
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-///////////////////////////////////// USUWANIE PRODUKTU /////////////////////////////////////////////////////////////
+        ///////////////////////////////////// USUWANIE PRODUKTU /////////////////////////////////////////////////////////////
         async deleteProduct(id) {
             console.log(id, "delete product id");
             axios
@@ -271,12 +299,12 @@ export default {
                     console.log(error);
                 });
         },
-///////////////////////////////////// POBIERANIE SAMEJ KATEGORII PRODUKTU /////////////////////////////////////////////////////////////
-        async getProductCategory(){
+        ///////////////////////////////////// POBIERANIE SAMEJ KATEGORII PRODUKTU /////////////////////////////////////////////////////////////
+        async getProductCategory() {
             axios
                 .get("/api/v1/productCategory/")
                 .then((response) => {
-                    console.log(response,'response z getproductcategory');
+                    console.log(response, 'response z getproductcategory');
                     this.productCategories = response.data;
                     console.log(this.productCategories);
                 })
@@ -291,7 +319,7 @@ export default {
                 this.$store.commit("consumeAlert");
                 console.log(this.alertMessage);
                 setTimeout(() => { this.alertMessage = ""; }, 4300);
-                
+
             }
         },
         close() {
@@ -316,15 +344,14 @@ export default {
     width: 140px !important;
     height: 140px !important;
 }
-.pagination > .active > a
-{
+
+.pagination>.active>a {
     color: white;
     background-color: #2b9788 !Important;
     border: solid 1px #2b9788 !Important;
 }
 
-.pagination > .active > a:hover
-{
+.pagination>.active>a:hover {
     background-color: #1a5f56 !Important;
     border: solid 1px #1a5f56;
 }

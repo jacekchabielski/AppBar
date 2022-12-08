@@ -1,13 +1,25 @@
 <template>
-<navbar></navbar>
-{{name}}
-{{description}}
-{{price}}
-
-<img :src="image" alt="zdjecie" class="rounded-circle" style="width:200px;">
-<div v-for="product in product_list">
-{{product.name}}
-</div>
+    <navbar></navbar>
+    <MDBCard class="mt-3">
+        <MDBCardHeader><h1>{{ name }}</h1></MDBCardHeader>
+        <MDBCardBody>
+            <MDBRow>
+                <MDBCol><img :src="image" alt="zdjecie" class="rounded-circle" style="width:200px;"></MDBCol>
+                <MDBCol>
+                    <h2>składniki</h2>
+                    <hr>
+                    <div v-for="product in product_list">
+                        {{ product.name }}
+                    </div>
+                </MDBCol>
+                <MDBCol>{{ description }} {{ price }}</MDBCol>
+            </MDBRow>
+        </MDBCardBody>
+    </MDBCard>
+    
+    
+    
+    
 </template>
 
 
@@ -16,9 +28,28 @@ import axios from "axios";
 import Navbar from "@/components/ui/Navbar.vue";
 import FormData from "form-data";
 
+import {
+    MDBCard,
+    MDBCardHeader,
+    MDBCardBody,
+    MDBCardTitle,
+    MDBCardText,
+    MDBBtn,
+    MDBRow,
+    MDBCol,
+} from "mdb-vue-ui-kit";
+
 export default {
     components: {
         Navbar,
+        MDBCard,
+        MDBCardHeader,
+        MDBCardBody,
+        MDBCardTitle,
+        MDBCardText,
+        MDBBtn,
+        MDBRow,
+        MDBCol,
     },
     data() {
         return {
@@ -42,7 +73,7 @@ export default {
         this.getRecipe();
     },
     methods: {
-        getRecipe(){
+        getRecipe() {
             const recipe_id = this.$route.params.id;   //? pobranie id przepisu z parametru - URL
             let formData = new FormData();
             //formData.append('id', product_id);

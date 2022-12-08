@@ -63,7 +63,7 @@
                 <!--  KARTA  -->
             
                 <MDBCol>
-                    <MDBCard text="dark" bg-silver style="width: 20rem;" >
+                    <MDBCard text="dark" bg-silver style="width: 20rem;" id="card">
                         <a v-mdb-ripple="{ color: 'light' }">
                             <MDBCardImg v-bind:src="recipe.get_thumbnail" style="width: 100%; height: 12vw; object-fit: cover;"  class="img-fluid zoom" top alt="..." />
                         </a>
@@ -349,7 +349,7 @@ export default {
     display: block !important;
 }
 
-.card:hover{
+#card:hover{
     transform: scale(1.05);
     box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
 }
