@@ -11,7 +11,16 @@ from django.http import Http404
 from product_category.models import Product_category
 from django.core.paginator import Paginator
 
-#! WYŚWIETLANIE WSZYSTKICH PRODUKTÓW
+class ViewAllProducts(APIView):
+    def get(self, request): #! pobieranie wszystkiego
+        products = Product.objects.filter(Q(deleted = False))                                       #? ktore nie sa usuniete (deleted=False)
+        products = Product.objects.filter(Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
+        serializer = ProductSerializer(products, many = True)
+        data = {}
+        data['products'] = serializer.data
+        return Response(data)
+
+#! WYŚWIETLANIE WSZYSTKICH PRODUKTÓW  Z PAGINACJĄ
 class ViewProducts(APIView):
     def get(self, request): #! pobieranie wszystkiego
         page_number = self.request.query_params.get('page_number', 1)                               #? numer aktualnej strony (aktualnie pierwsza)
