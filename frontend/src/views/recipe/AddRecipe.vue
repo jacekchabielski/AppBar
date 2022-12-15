@@ -15,7 +15,7 @@
                                 rows="4" required />
 
                             <MDBRow class="card border mx-auto ">
-                                wybierz produkty
+                                <h5 class="my-auto mt-3">wybierz produkty</h5>
                                 <hr>
                                 <MDBTabs v-model="activeTabId4" vertical>
                                     <MDBTabNav tabsClasses="mb-3 text-center">
@@ -49,7 +49,7 @@
                                 </MDBTabs>
                             </MDBRow>
 
-                            <p>wybierz kategorie dania</p>
+                            <h5 class="my-auto mt-2 mb-2">wybierz kategorie dania</h5>
 
                             <select class="form-select mb-4" id="idCategory" aria-label="Default select example"
                                 required>
@@ -90,8 +90,7 @@
                                     <MDBCardText>
                                         <li v-for="product in ProductsSelectedObject">
                                             {{ product.name }} - {{ product.quantity }} szt.
-                                          </li>
-                                          
+                                        </li>
                                     </MDBCardText>
                                 </MDBCardBody>
                             </MDBCard>

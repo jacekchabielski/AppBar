@@ -5,4 +5,5 @@ from recipe import views
 urlpatterns = [
     path('recipe/<int:id>/', views.ViewRecipe.as_view()), #! zwraca przepis
     path('recipes/', views.ViewRecipes.as_view()), #! zwraca wszystkie przepisy (recipes)
+    path('recipes/search/', views.search),
 ]

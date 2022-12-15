@@ -10,6 +10,7 @@ from rest_framework import status
 from django.http import Http404
 from product_category.models import Product_category
 from django.core.paginator import Paginator
+from rest_framework.decorators import api_view
 
 class ViewAllProducts(APIView):
     def get(self, request): #! pobieranie wszystkiego
@@ -19,6 +20,24 @@ class ViewAllProducts(APIView):
         data = {}
         data['products'] = serializer.data
         return Response(data)
+
+@api_view(['POST'])                             #! wyszukiwanie produktów
+def search(request):
+    query = request.data.get('query', '')
+    if query:
+        products = Product.objects.filter(Q(name__icontains = query) | Q(description__icontains = query) ).all()
+        products_list = list(products)
+        page_number = request.query_params.get('page_number', 1)                               #? numer aktualnej strony (aktualnie pierwsza)
+        page_size = request.query_params.get('page_size', 5)  
+        paginator = Paginator(products_list, page_size)
+        serializer = ProductSerializer(paginator.page(page_number), many = True)
+        data = {}
+        data['products'] = serializer.data
+        data['page_numbers'] = paginator.num_pages                                                  #? ile bedzie razem podstron
+        data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response({'products':[]})
 
 #! WYŚWIETLANIE WSZYSTKICH PRODUKTÓW  Z PAGINACJĄ
 class ViewProducts(APIView):
@@ -38,7 +57,7 @@ class ViewProducts(APIView):
         data['products'] = serializer.data
         data['page_numbers'] = paginator.num_pages                                                  #? ile bedzie razem podstron
         data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
-        return Response(data)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 
@@ -119,4 +138,3 @@ class ViewProduct(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
     
-

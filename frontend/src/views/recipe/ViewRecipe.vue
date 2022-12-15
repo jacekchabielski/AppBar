@@ -1,20 +1,20 @@
-<template >
+<template>
     <navbar></navbar>
     <div v-if="alertMessage" class="alert alert-success alert-dismissible fade show" role="alert">
         {{ alertMessage }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="close()"></button>
     </div>
-    <MDBContainer style="font-family: 'Molle',cursive;" >
-        <MDBRow  class="mb-4">
-            <MDBCol>
+    
+    <MDBContainer fluid style="font-family: 'Molle', cursive;" >
+        <MDBRow  class="mb-4 mt-2 col-md-12">
+            <MDBCol class="col-md-10">
                 <MDBDropdown class="nav-item" v-model="dropdown1">
                     <div>
                         <MDBDropdownToggle tag="a" @click="dropdown1 = !dropdown1" class="h2 link-dark "> Kategorie
                         </MDBDropdownToggle>
 
                         <MDBDropdownMenu dark aria-labelledby="dropdownMenuButton" class="mt-2">
-                            <MDBDropdownItem tag="button" @click="getRecipesByCategory('Wszystkie kategorie')">Wszystkie
-                                Kategorie</MDBDropdownItem>
+                            <MDBDropdownItem tag="button" @click="getRecipesByCategory('Wszystkie kategorie')">Wszystkie Kategorie</MDBDropdownItem>
                             <MDBDropdownItem divider />
                             <MDBDropdownItem tag="button" v-for="category in recipeCategories"
                                 @click="getRecipesByCategory(category)">{{ category }}</MDBDropdownItem>
@@ -22,63 +22,44 @@
                     </div>
                 </MDBDropdown>
             </MDBCol>
-
+            <MDBCol class="col-md-2">
+                <form @submit.prevent="searchForm">
+                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj produkt" aria-label="Search">
+                        <MDBBtn color="primary" type="submit">
+                            <MDBIcon icon="search" />
+                        </MDBBtn>
+                    </MDBInput>
+                </form>
+            </MDBCol>
         </MDBRow>
-        <MDBRow :cols="['1','md-3']" class="g-4">
-            <template v-for="(recipe, index) in recipes.recipes" v-bind:key="recipe.id">
-                <!-- 
-            <MDBRow @click="collapseList[index] = !collapseList[index]" class="border-bottom pb-3">
-                <MDBCol>
-                    <div class="d-flex align-items-center">
-                        <img v-bind:src="recipe.get_thumbnail" class="rounded-circle image"
-                            :class="{ 'image-large': collapseList[index] }" />
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">{{ recipe.name }}</p>
-                        </div>
-                    </div>
-                </MDBCol>
-                <MDBCol class="d-flex align-items-center justify-content-center"> {{ recipe.Recipe_category_name }}
-                </MDBCol>
-                <MDBCol class="d-flex align-items-center justify-content-center">
-                    <p style="max-width: 250px;" class="fw-normal mb-1"
-                        :class="{ 'text-truncate': !collapseList[index] }">
-                        {{ recipe.description }}
-                    </p>
-                </MDBCol>
-
-                <MDBCol class=" d-flex align-items-center justify-content-center gap-1"
-                    :class="{ 'align-items-start': !collapseList[index] }">
-                    <MDBBtn color="link" size="sm" rounded>
-                        <router-link v-bind:to="'#' + recipe.get_absolute_url">Edytuj</router-link>
-                    </MDBBtn>
-                    <MDBBtn type="button" color="danger" size="sm" rounded @Click="setId(recipe.id)">
-                        usuń
-                    </MDBBtn>
-                </MDBCol>
+        <MDBContainer>
+            <h2 v-if="empty" class="text-danger">nie znaleziono szukanych przepisów</h2>
+            <MDBRow :cols="['1','md-3']" class="g-4">
+                
+                <template v-for="(recipe, index) in recipes.recipes" v-bind:key="recipe.id">
+                    
+                
+                
+                    <!--  KARTA  -->
+                
+                    <MDBCol>
+                        <MDBCard text="dark" bg-silver style="width: 20rem;" id="card">
+                            <a v-mdb-ripple="{ color: 'light' }">
+                                <MDBCardImg v-bind:src="recipe.get_thumbnail" style="width: 100%; height: 12vw; object-fit: cover;"  class="img-fluid zoom" top alt="..." />
+                            </a>
+                            <MDBCardBody>
+                                <MDBCardTitle>{{ recipe.name }}</MDBCardTitle>
+                                <MDBCardText>
+                                    {{ recipe.description }}
+                                </MDBCardText>
+                                <MDBBtn tag="a" :href="'/ViewRecipeDetails' + recipe.get_absolute_url" color="primary">Więcej..</MDBBtn>
+                            </MDBCardBody>
+                        </MDBCard>
+                    </MDBCol>
+                
+                </template>
             </MDBRow>
-            -->
-            
-            
-            
-                <!--  KARTA  -->
-            
-                <MDBCol>
-                    <MDBCard text="dark" bg-silver style="width: 20rem;" id="card">
-                        <a v-mdb-ripple="{ color: 'light' }">
-                            <MDBCardImg v-bind:src="recipe.get_thumbnail" style="width: 100%; height: 12vw; object-fit: cover;"  class="img-fluid zoom" top alt="..." />
-                        </a>
-                        <MDBCardBody>
-                            <MDBCardTitle>{{ recipe.name }}</MDBCardTitle>
-                            <MDBCardText>
-                                {{ recipe.description }}
-                            </MDBCardText>
-                            <MDBBtn tag="a" :href="'/ViewRecipeDetails' + recipe.get_absolute_url" color="primary">Więcej..</MDBBtn>
-                        </MDBCardBody>
-                    </MDBCard>
-                </MDBCol>
-            
-            </template>
-        </MDBRow>
+        </MDBContainer>
     </MDBContainer>
 
     <div class="modal" id="myModal" :class="{ 'show-modal': actualId }" v-show="actualId">
@@ -163,6 +144,8 @@ import {
     MDBCardText,
     MDBCardImg,
     mdbRipple,
+    MDBInput,
+    MDBIcon,
 
 } from "mdb-vue-ui-kit";
 
@@ -195,6 +178,8 @@ export default {
         MDBCardTitle,
         MDBCardText,
         MDBCardImg,
+        MDBInput,
+        MDBIcon
 
     },
     directives: {
@@ -228,7 +213,8 @@ export default {
             recipeCategories: [],
             page_size: 6,
             activeClass: "active",
-            activeCategory: ''
+            activeCategory: '',
+            empty: false, //sprawdzanie czy pole do wyszukiwania jest puste
         };
     },
     mounted() {
@@ -245,7 +231,24 @@ export default {
             this.actualId = id;
             console.log(this.actualId, "dd");
         },
+        async searchForm() {                    //POLE DO WYSZUKIWANIA PRODUKTOW
+            //console.log(this.query);
+            axios
+                .post(`/api/v1/recipes/search/?page_number=${this.$route.params.page_number}&page_size=${this.page_size}`,
+                {
+                    query: this.query
+                })
+                .then((response) => {
+                    this.recipes = response.data;
+                    console.log(this.recipes.recipes.length, 'długość');
+                    if(this.recipes.recipes.length==0){this.empty = true;}
+                    else{this.empty = false;}
 
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
 
         ///////////////////////////////////// POBIERANIE WSZYSTKICH PRZEPISOW /////////////////////////////////////////////////////////////
         async getRecipes() {

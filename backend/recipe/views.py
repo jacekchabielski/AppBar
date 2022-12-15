@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from django.core.paginator import Paginator
+from rest_framework.decorators import api_view
 
 class ViewRecipes(APIView):
     def get(self, request): #! pobieranie wszystkiego
@@ -28,6 +29,24 @@ class ViewRecipes(APIView):
         data['page_numbers'] = paginator.num_pages                                                  #? ile bedzie razem podstron
         data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
         return Response(data)
+
+@api_view(['POST'])                             #! wyszukiwanie przepisow
+def search(request):
+    query = request.data.get('query', '')
+    if query:
+        recipes = Recipe.objects.filter(Q(name__icontains = query) | Q(description__icontains = query) ).all()
+        recipes_list = list(recipes)
+        page_number = request.query_params.get('page_number', 1)                               #? numer aktualnej strony (aktualnie pierwsza)
+        page_size = request.query_params.get('page_size', 5)  
+        paginator = Paginator(recipes_list, page_size)
+        serializer = RecipeSerializer(paginator.page(page_number), many = True)
+        data = {}
+        data['recipes'] = serializer.data
+        data['page_numbers'] = paginator.num_pages                                                  #? ile bedzie razem podstron
+        data['next_page'] = False if int(page_number) >= paginator.num_pages else True              #? czy istnieje kolejna podstrona
+        return Response(data, status=status.HTTP_200_OK)
+    else:
+        return Response({'recipes':[]})
 
 class ViewRecipe(APIView):
     def get(self,request, id):

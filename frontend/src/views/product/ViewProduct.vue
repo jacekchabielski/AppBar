@@ -36,8 +36,7 @@
             </MDBCol>
             <MDBCol>
                 <form @submit.prevent="searchForm">
-                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Search"
-                        aria-label="Search">
+                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj produkt" aria-label="Search">
                         <MDBBtn color="primary" type="submit">
                             <MDBIcon icon="search" />
                         </MDBBtn>
@@ -46,7 +45,7 @@
             </MDBCol>
 
         </MDBRow>
-
+        <h2 v-if="empty" class="text-danger">nie znaleziono szukanych produktow</h2>
         <template v-for="(product, index) in products.products" v-bind:key="product.id">
             <MDBRow @click="collapseList[index] = !collapseList[index]" class="border-bottom pb-3">
                 <MDBCol>
@@ -220,7 +219,8 @@ export default {
             page_size: 6,
             activeClass: "active",
             activeCategory: '',
-            query: ""
+            query: "",
+            empty: false, //sprawdzanie czy pole do wyszukiwania jest puste
         };
     },
     mounted() {
@@ -240,8 +240,24 @@ export default {
             console.log(this.actualId, "dd");
         },
 
-        async searchForm() {
-            console.log(this.query);
+        async searchForm() {                    //POLE DO WYSZUKIWANIA PRODUKTOW
+            //console.log(this.query);
+            axios
+                .post(`/api/v1/products/search/?page_number=${this.$route.params.page_number}&page_size=${this.page_size}`,
+                {
+                    query: this.query
+                })
+                .then((response) => {
+                    this.products = response.data;
+                    if(this.products.products.length==0){this.empty = true;}
+                    else{this.empty = false;}
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+
         },
         ///////////////////////////////////// POBIERANIE WSZYSTKICH PRODUKTÓW /////////////////////////////////////////////////////////////
         async getProducts() {
