@@ -18,5 +18,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'product_list',   
             'get_absolute_url',
             'get_image',
-            'get_thumbnail',       
+            'get_thumbnail',
+            'Recipe_category'
         )

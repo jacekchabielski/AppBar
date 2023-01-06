@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from .models import Recipe
 from .serializers import RecipeSerializer
 from rest_framework.serializers import Serializer
@@ -10,6 +9,10 @@ from rest_framework import status
 from django.http import Http404
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view
+from recipe_category.models import Recipe_category
+from django.shortcuts import render, get_object_or_404
+from product.models import Product
+from django.http import HttpResponse
 
 class ViewRecipes(APIView):
     def get(self, request): #! pobieranie wszystkiego
@@ -59,3 +62,38 @@ class ViewRecipe(APIView):
             return Recipe.objects.get(id = recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
+
+    
+class AddRecipe(APIView):
+
+    def post(self, request):
+        data = self.request.data
+        category_name = data.get('recipe_category')
+        recipeCategory = Recipe_category.objects.get( name = category_name).id
+        _mutable = data._mutable  # * zezwolenie na modyfikowanie data
+        data._mutable = True
+        data['Recipe_category'] = recipeCategory
+        data._mutable = _mutable
+        serializer = RecipeSerializer(data=data)
+        if serializer.is_valid():
+            recipe = serializer.save()
+            if 'image' in data:
+                recipe.image = data['image']
+                recipe.thumbnail = None
+                recipe.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+    #post i tutaj to co recipe + add_produkt * ile produktów
+class AddProduct_to_Recipe(APIView):
+    def post(self, request):
+        data = self.request.data
+        product_id = data.get('id')
+        quantity = data.get('quantity')
+        recipe_id = Recipe.objects.latest('id').id
+        #print(recipe_id, 'ID_PRZEPISU')
+        recipe = get_object_or_404(Recipe, id=recipe_id)
+        product = Product.objects.get(id = product_id)
+        #print(product, "PRODUKT")
+        recipe.add_product(product, quantity)
+        return HttpResponse('')

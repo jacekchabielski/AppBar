@@ -24,7 +24,7 @@
             </MDBCol>
             <MDBCol class="col-md-2">
                 <form @submit.prevent="searchForm">
-                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj produkt" aria-label="Search">
+                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj przepis" aria-label="Search">
                         <MDBBtn color="primary" type="submit">
                             <MDBIcon icon="search" />
                         </MDBBtn>

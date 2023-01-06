@@ -60,9 +60,10 @@ class Recipe(models.Model):
         thumbnail = File(thumb_io, name = image.name)
         return thumbnail
 
-    def add_product(self, product, quantity= 1):
-        new_recipe_product = RecipeProduct.objects.get_or_create(product_id= product.id, recipe_id= self.id)
-        new_recipe_product.quantity += quantity
+    def add_product(self, product, quantity):
+        #print(product.id ,"product w add product")
+        new_recipe_product = RecipeProduct.objects.get_or_create(product_id=product, recipe_id=self, quantity=quantity)
+        #new_recipe_product.quantity += quantity
         return new_recipe_product
     
     def update_product(self, product, quantity):

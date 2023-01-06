@@ -51,10 +51,9 @@
 
                             <h5 class="my-auto mt-2 mb-2">wybierz kategorie dania</h5>
 
-                            <select class="form-select mb-4" id="idCategory" aria-label="Default select example"
-                                required>
-                                <option v-for="recipeCategory in recipeCategories" v-bind:key="recipeCategory.id"
-                                    :value="recipeCategory.id">{{ recipeCategory }}</option>
+                            <select class="form-select mb-4" id="idCategory" aria-label="Default select example" required>
+                                
+                                <option v-for="recipeCategory in recipeCategories" v-bind:key="recipeCategory.id" :value="recipeCategory.id">{{recipeCategory}}</option>
                             </select>
 
 
@@ -165,7 +164,7 @@ export default {
             collapseList: [],
             selectedProducts: [],       //zaznaczone produkty - id
             selectedProductsNames: [], //nazwy zaaznaczonych produktów
-            ProductsSelectedObject : [],
+            ProductsSelectedObject : [], // id + nazwa + ilosc zaznaczonych rzeczy
             default_number: 0
 
         }
@@ -187,8 +186,6 @@ export default {
     },
     methods: {                                                                          //POBIERANIE WSZYSTKICH PRODUKTOW
         async getProducts() {
-
-
             axios
                 .get(`/api/v1/products/all/`) //* get pobierający wszystkie produkty (które nie są usunięte)
                 .then((response) => {
@@ -247,7 +244,7 @@ export default {
                     if (!this.products.products[number].quantity) {
                         this.products.products[number].quantity = 1;
                     }
-                    console.log(this.products.products[number], 'dupa');
+                    //console.log(this.products.products[number], 'dupa');
                     let objectToPush = {
                         'id': this.products.products[number].id,
                         'name': this.products.products[number].name,
@@ -268,6 +265,55 @@ export default {
 
         },
 
+        submitForm() {
+            let formData = new FormData();
+            formData.append('name', this.name);
+            formData.append('description', this.description);
+            formData.append('image', this.image);
+            formData.append('price', this.price);
+            var select = document.getElementById('idCategory');
+            var selectCategoryValue = select.options[select.selectedIndex].value ;
+            console.log(selectCategoryValue, 'ID_KATEGORII');
+            formData.append('recipe_category', selectCategoryValue);
+            axios
+                .post("/api/v1/add_recipe/", formData, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`,
+                        
+                    }
+                })
+                .then((response) => {
+                    console.log(response);
+                    //this.ProductsSelectedObject;
+                    for (let i = 0; i < this.ProductsSelectedObject.length; i++){
+                        let formData = new FormData();
+                        console.log(this.ProductsSelectedObject[i].id ,'product_id');
+                        formData.append('id', this.ProductsSelectedObject[i].id);
+                        formData.append('name',this.ProductsSelectedObject[i].name)
+                        formData.append('quantity',this.ProductsSelectedObject[i].quantity);
+                        //console.table(formData, 'jedno_do_wysłania');
+                        axios
+                            .post("/api/v1/add_product_to_recipe/", formData, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`,
+                        
+                    }
+                            })
+                            .then((response) => {
+                                console.log(response, 'produkt_dodany do przepisu');
+                                this.$router.push({ path: '/ViewRecipe/1/'});
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
+                        formData.forEach((value,key) => { console.log(key+" "+value)});
+                    }
+                
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
 
         handleFileUpload(event) {
             var input = event.target;
