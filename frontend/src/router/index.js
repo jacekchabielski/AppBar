@@ -10,11 +10,25 @@ import EditProduct from '../views/product/EditProduct.vue'
 import ViewRecipe from '../views/recipe/ViewRecipe.vue'
 import AddRecipe from '../views/recipe/AddRecipe.vue'
 import ViewRecipeDetails from '../views/recipe/ViewRecipeDetails.vue'
+import ViewUser from '../views/users/ViewUser.vue'
+import HomeOwner from '../views/HomeOwner.vue'
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/HomeOwner',
+    name: 'HomeOwner',
+    component: HomeOwner, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/ViewUser',
+    name: 'ViewUser',
+    component: ViewUser, 
     meta: { requireLogin: true}
   },
   {

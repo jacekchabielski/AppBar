@@ -12,12 +12,12 @@
         <!-- Navbar dropdown produkty -->
         <MDBDropdown class="nav-item" v-model="dropdown3">  
           <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown3 = !dropdown3">
-          Produkty
+            <i class="fas fa-carrot"></i> Produkty
           </MDBDropdownToggle>
           <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-            <MDBDropdownItem href="/addProduct">Dodaj produkt</MDBDropdownItem>
+            <MDBDropdownItem href="/addProduct"><i class="fas fa-plus"></i> Dodaj produkt</MDBDropdownItem>
 
-            <MDBDropdownItem href="/ViewProduct/1/">Wyswietl produkty</MDBDropdownItem>
+            <MDBDropdownItem href="/ViewProduct/1/"><i class="fas fa-eye"></i> Wyswietl produkty</MDBDropdownItem>
           </MDBDropdownMenu>
         </MDBDropdown>
       </MDBNavbarItem>
@@ -25,11 +25,11 @@
         <!-- Navbar dropdown przepis -->
         <MDBDropdown class="nav-item" v-model="dropdown2">  
           <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown2 = !dropdown2">
-          Przepisy
+            <i class="fas fa-book"></i> Przepisy
           </MDBDropdownToggle>
           <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-            <MDBDropdownItem href="/AddRecipe">Dodaj przepis</MDBDropdownItem>
-            <MDBDropdownItem href="/ViewRecipe/1/">Wyświetl przepisy</MDBDropdownItem>
+            <MDBDropdownItem href="/AddRecipe"><i class="fas fa-plus"></i> Dodaj przepis</MDBDropdownItem>
+            <MDBDropdownItem href="/ViewRecipe/1/"><i class="fas fa-eye"></i> Wyświetl przepisy</MDBDropdownItem>
           </MDBDropdownMenu>
         </MDBDropdown>
       </MDBNavbarItem>

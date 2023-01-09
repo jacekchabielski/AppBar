@@ -5,7 +5,21 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="close()"></button>
     </div>
     <MDBContainer fluid>
-        <MDBRow class="mb-4">
+        <MDBRow>
+            <MDBCol>
+                <div class="float-end mt-4">
+                    <form @submit.prevent="searchForm">
+                        <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj produkt" aria-label="Search">
+                            <MDBBtn color="primary" type="submit">
+                                <MDBIcon icon="search" />
+                            </MDBBtn>
+                        </MDBInput>
+                    </form>
+                </div>
+            </MDBCol>
+        </MDBRow>
+        
+        <MDBRow class="mb-4 rounded-pill mx-2 py-2" style="background-color:rgb(160, 160, 160)">
             <MDBCol>
                 <h2>Nazwa</h2>
             </MDBCol>
@@ -34,20 +48,10 @@
             <MDBCol>
                 <h2>Akcje</h2>
             </MDBCol>
-            <MDBCol>
-                <form @submit.prevent="searchForm">
-                    <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj produkt" aria-label="Search">
-                        <MDBBtn color="primary" type="submit">
-                            <MDBIcon icon="search" />
-                        </MDBBtn>
-                    </MDBInput>
-                </form>
-            </MDBCol>
-
         </MDBRow>
         <h2 v-if="empty" class="text-danger">nie znaleziono szukanych produktow</h2>
         <template v-for="(product, index) in products.products" v-bind:key="product.id">
-            <MDBRow @click="collapseList[index] = !collapseList[index]" class="border-bottom pb-3">
+            <MDBRow @click="collapseList[index] = !collapseList[index]" class="border-bottom pb-3" >
                 <MDBCol>
                     <div class="d-flex align-items-center">
                         <img v-bind:src="product.get_thumbnail" class="rounded-circle image"
