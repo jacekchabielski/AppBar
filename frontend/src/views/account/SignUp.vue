@@ -8,7 +8,7 @@
                   <div class="row justify-content-center">
                     <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
       
-                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Rejestracja</p>
+                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Rejestrowanie pracownika</p>
       
                       <form class="mx-1 mx-md-4" @submit.prevent = "submitForm">
       
@@ -17,6 +17,46 @@
                           <div class="form-outline flex-fill mb-0">
                             <input type="text" id="login" class="form-control" v-model="username" />
                             <label class="form-label" for="form3Example1c">Login</label>
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="first_name" class="form-control" v-model="first_name" />
+                            <label class="form-label" for="form3Example1c">imie</label>
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="last_name" class="form-control" v-model="last_name" />
+                            <label class="form-label" for="form3Example1c">nazwisko</label>
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="email" id="email" class="form-control" v-model="email" />
+                            <label class="form-label" for="form3Example1c">email</label>
+                          </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="login" class="form-control" v-model="role" />
+                            <label class="form-label" for="form3Example1c">Role</label>
+                          </div>
+
+                        </div>
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <input type="text" id="login" class="form-control" v-model="workplace" />
+                            <label class="form-label" for="form3Example1c">Workplace</label>
                           </div>
                         </div>
       
@@ -36,12 +76,11 @@
                             <label class="form-label" for="form3Example4cd">Repeat your password</label>
                           </div>
                         </div>
-       
-      
+
                         <div class="d-flex justify-content-center">
-                          <button type="submit" class="btn btn-primary btn-lg">Rejestruj</button>
+                          <button type="submit" class="btn btn-primary btn-lg">Dodaj nowego pracownika</button>
                         </div>
-                        masz konto? <router-link to="/Login">Zaloguj sie</router-link>
+                        <router-link to="/ViewUser">powrót</router-link>
                         
                       </form>
                       <div class="alert alert-danger" v-if="errors.length">
@@ -71,13 +110,18 @@ export default {
   data() {
     return {
       username: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      role: '',
+      workplace: '',
       password: '',
       password2: '',
       errors: [],
     }
   },
   mounted() {
-    document.title = 'Rejestracja'
+    document.title = 'Rejestracja pracownika'
   },
   methods: {
     submitForm() {
@@ -96,11 +140,28 @@ export default {
         const formData = {
           username: this.username,
           password: this.password,
+
         }
+        let ProfileData = new FormData();
+        ProfileData.append('first_name', this.first_name);
+        ProfileData.append('last_name', this.last_name);
+        ProfileData.append('role', this.role);
+        ProfileData.append('workplace', this.workplace);
+        ProfileData.append('email', this.email);
         axios
             .post('/api/v1/users/', formData)
             .then(response => {
-                        this.$router.push('/Login')
+              //setTimeout(() => { this.alertMessage = ""; }, 4300);
+                    axios
+                    
+                      .put('/api/v1/profile_register/',ProfileData)
+                      .then(response =>{
+                        console.log(response)
+                      })
+                      .catch(error =>{
+                        console.log(error)
+                      })
+                        this.$router.push('/ViewUser')
                     })
                     .catch(error => {
                         if (error.response) {

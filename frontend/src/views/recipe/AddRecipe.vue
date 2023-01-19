@@ -14,8 +14,8 @@
                             <MDBTextarea label="opis" id="description" wrapperClass="mb-4" v-model="description"
                                 rows="4" required />
 
-                            <MDBRow class="card border mx-auto ">
-                                <h5 class="my-auto mt-3">wybierz produkty</h5>
+                            <MDBRow class="card border text-center ">
+                                <h5 class="my-auto mt-3 ">wybierz produkty</h5>
                                 <hr>
                                 <MDBTabs v-model="activeTabId4" vertical>
                                     <MDBTabNav tabsClasses="mb-3 text-center">
@@ -66,7 +66,7 @@
 
 
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 text-center">
                             <div v-if="imagePreview.length === 0">
                                 <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
                                     class="rounded-circle" alt="example placeholder" style="width: 200px;" />
@@ -75,7 +75,7 @@
                                 <img :src="imagePreview" alt="zdjecie" class="rounded-circle" style="width:200px;">
                             </div>
                             <div>
-                                <div class="btn btn-primary btn-rounded">
+                                <div class="btn btn-primary btn-rounded mt-3">
                                     <MDBFile class="form-control d-none" label="zdjecie"
                                         @change="handleFileUpload($event)" id="image" accept=".jpg,.jpeg,.png" />
                                 </div>

@@ -4,7 +4,7 @@
         {{ alertMessage }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="close()"></button>
     </div>
-    <MDBContainer fluid>
+    <MDBContainer fluid class="text-center">
         <MDBRow>
             <MDBCol>
                 <div class="float-end mt-4">

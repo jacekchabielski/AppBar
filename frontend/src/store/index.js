@@ -63,6 +63,7 @@ export default createStore({
     },
     setUsername(state, username) {
       state.user.username = username;
+      localStorage.setItem("username",username);
     },
     logoutUser(state) {
       //! wylogowywanie

@@ -1,6 +1,6 @@
 <template>
     <navbar></navbar>
-    <div class="container">
+    <div class="container text-center">
 
 
         <MDBCard class="center-block">

@@ -7,7 +7,7 @@ from django.db.models.signals import post_save, post_delete, pre_delete
 from django.contrib.auth.models import User
 from django.db.models.deletion import CASCADE
 from django.dispatch import receiver
-
+from io import BytesIO
 
 class User_Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -20,6 +20,7 @@ class User_Profile(models.Model):
     thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
     role = models.TextField(blank=True, null=True)
     workplace = models.TextField(blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True)
 
     class Meta:
         ordering = ('-created', )

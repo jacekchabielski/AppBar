@@ -11,12 +11,26 @@ from django.db.models import Q
 class Register(APIView):
     def put(self, request, format=None):
         user = User.objects.last().id
-        print(user, "to jest user")
         data = self.request.data
         user_profile = User_Profile.objects.get(user=user)
         serializer = User_ProfileSerializer(user_profile, data=data, partial = True)
         if serializer.is_valid():
             profile = serializer.save()
+            profile.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+class ChangeAvatar(APIView):
+    def put(self, request, format=None):
+        user = self.request.data.get('id') 
+        data = self.request.data
+        user_profile = User_Profile.objects.get(user=user)
+        serializer = User_ProfileSerializer(user_profile, data=data, partial = True)
+        if serializer.is_valid():
+            profile = serializer.save()
+            if 'image' in data:
+                profile.image = data['image']
+                profile.thumbnail = ''
             profile.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -28,3 +42,18 @@ class ViewAllProfiles(APIView):
         data = {}
         data['profiles'] = serializer.data
         return Response(data)
+
+class ViewSingleProfile(APIView):
+    def get(self, request, id): 
+        user = self.get_object(id)
+        print(user, "to jest user z virewsow")
+        user_profile = User_Profile.objects.get(id=user.id)
+        serializer = User_ProfileSerializer(user_profile)                                      #? ktore nie sa usuniete (deleted=False)
+        return Response(serializer.data)
+
+    def get_object(self, profile_id):
+        try:
+            return User_Profile.objects.get(user = profile_id)
+        except User_Profile.DoesNotExist:
+            raise Http404
+        

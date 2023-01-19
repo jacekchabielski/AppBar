@@ -12,6 +12,7 @@ import AddRecipe from '../views/recipe/AddRecipe.vue'
 import ViewRecipeDetails from '../views/recipe/ViewRecipeDetails.vue'
 import ViewUser from '../views/users/ViewUser.vue'
 import HomeOwner from '../views/HomeOwner.vue'
+import UserProfile from '../views/users/UserProfile.vue'
 const routes = [
   {
     path: '/',
@@ -29,6 +30,12 @@ const routes = [
     path: '/ViewUser',
     name: 'ViewUser',
     component: ViewUser, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/UserProfile',
+    name: 'UserProfile',
+    component: UserProfile, 
     meta: { requireLogin: true}
   },
   {
