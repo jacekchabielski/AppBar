@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'recipe',
     'recipe_category',
     'user_profile',
+    'order',
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
