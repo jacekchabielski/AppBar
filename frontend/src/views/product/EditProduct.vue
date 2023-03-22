@@ -9,11 +9,11 @@
                 <form @submit.prevent="submitForm">
                     <div class="row">
                         <div class="col-md-6">
-                            <MDBInput type="text" label="name" id="name" wrapperClass="mb-4" v-model="name"  required />
+                            <MDBInput type="text" label="Nazwa" id="name" wrapperClass="mb-4" v-model="name"  required />
                             
-                            <MDBTextarea label="description" id="description" wrapperClass="mb-4" v-model="description"
+                            <MDBTextarea label="Opis" id="description" wrapperClass="mb-4" v-model="description"
                                 rows="4" required />
-                            <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4"
+                            <MDBInput type="number" label="Ilość" id="product_quantity" wrapperClass="mb-4"
                             v-model="product_quantity" required />
 
                             <p>wybierz kategorie</p>
@@ -45,9 +45,7 @@
                                 <MDBBtn color="warning" block type="submit"> zapisz edycje </MDBBtn>
                             </div>
     
-                            <div v-if="alert">
-                                <p>Zapisz zmiany !</p>
-                            </div>
+                            
                         </div>
                     </div>
 

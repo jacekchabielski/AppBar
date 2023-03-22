@@ -1,70 +1,104 @@
 <template>
     <navbar></navbar>
-    <MDBContainer>
-        <div class="col-md-12">
-            <div></div>
-        </div>
-        <p>witaj {{ username }}</p>                             <!-- ERROR OD NIEPOMYSLNEJ ZMIANY UZYTKOWNIKA --->
-        <div class="alert alert-danger" v-if="errors.length">
-            <p v-for="error in errors" v-bind:key="error">
-                {{ error }}
-            </p>
-        </div>
+    <div class="alert alert-danger" v-if="errors.length">
+        <p v-for="error in errors" v-bind:key="error">
+            {{ error }}
+        </p>
+    </div>
 
-        <div class="alert alert-success" v-if="alert">          <!-- ALERT OD POMYSLNEJ ZMIANY LOGINU --->
-            <p>
-                {{ alert }}
-            </p>
-        </div>
-        <div class="alert alert-danger" v-if="errorsUser.length"> <!-- ERROR OD NIEPOMYSLNEJ ZMIANY hasła --->
-            <p v-for="error in errorsUser" v-bind:key="error">
-                {{ error }}
-            </p>
-        </div>
-        <MDBCard>
-            <MDBCardBody>
-                <form @submit.prevent="ChangeUsername">
-                    <MDBCardTitle>Edycja nazwy uzytkownika</MDBCardTitle>
-                    <MDBInput label="podaj nowa nazwe uzytkownika" v-model="new_username" type="text" required />
-                    <MDBInput label="powtorz nowa nazwe uzytkownika" v-model="re_new_username" type="text" required />
-                    <MDBInput label="Podaj haslo" type="password" v-model="loginCurrentPassword" required />
-                    <MDBBtn color="primary" type="submit">zmień</MDBBtn>
-                </form>
-            </MDBCardBody>
-        </MDBCard>
-        <MDBCard>
-            <MDBCardBody>
-                <form @submit.prevent="ChangePassword">
-                    <MDBCardTitle>Edycja hasła</MDBCardTitle>
-                    <MDBInput label="stare haslo" type="password" v-model="current_password" required />
-                    <MDBInput label="nowe haslo" type="password" v-model="new_password" required />
-                    <MDBInput label="powtorz nowe haslo" type="password" v-model="re_new_password" required />
-                    <MDBBtn color="primary" type="submit">zmień</MDBBtn>
-                </form>
-            </MDBCardBody>
-        </MDBCard>
-        <MDBCard>
-            <MDBCardBody>
-                <form @submit.prevent="ChangeAvatar">
-                    <MDBCardTitle>Edycja avatara</MDBCardTitle>
-                    <div v-if="imagePreview.length === 0">
-                        <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
-                            class="rounded-circle" alt="example placeholder" style="width: 200px" />
-                    </div>
-                    <div v-if="imagePreview.length > 0">
-                        <img :src="imagePreview" alt="zdjecie" class="rounded-circle" style="width: 200px" />
-                    </div>
-                    <div>
-                        <div class="btn btn-primary btn-rounded">
-                            <MDBFile class="form-control d-none" label="zdjecie" @change="handleFileUpload($event)"
-                                id="image" accept=".jpg,.jpeg,.png" />
+    <div class="alert alert-success" v-if="alert"> <!-- ALERT OD POMYSLNEJ ZMIANY LOGINU --->
+        <p>
+            {{ alert }}
+        </p>
+    </div>
+    <div class="alert alert-danger" v-if="errorsUser.length"> <!-- ERROR OD NIEPOMYSLNEJ ZMIANY hasła --->
+        <p v-for="error in errorsUser" v-bind:key="error">
+            {{ error }}
+        </p>
+    </div>
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container py-1 h-75">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-lg-8 mb-4 mb-lg-0">
+                    <div class="card mb-3" style="border-radius: .5rem;">
+                        <div class="row g-0">
+                            <div class="col-md-4 gradient-custom text-center text-white"
+                                style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                                <h5 class="text-dark mt-5">{{ username }}</h5>
+                                <p class="text-dark">{{ user.role }}</p>
+                                <form @submit.prevent="ChangeAvatar">
+                                    <div v-if="imagePreview.length === 0">
+                                        <div v-if="user.get_image == '' ">
+                                            <img  src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg" alt="" loading="lazy" class="img-fluid mt-5 mb-2 rounded" style="width: 120px; height: 120px" />
+                                        </div>
+                                        <div v-if="user.get_image != '' ">
+                                            <img  :src="user.get_image" alt="" loading="lazy" class="img-fluid mt-5 mb-2 rounded" style="width: 120px; height: 120px" />
+                                        </div>
+                                    </div>
+                                    <div v-if="imagePreview.length > 0">
+                                        <img :src="imagePreview" alt="zdjecie" class="img-fluid my-5 rounded" style="width: 120px;height: 120px" />
+                                    </div>
+                                    <div>
+                                        <div class="mt-1 mb-1">
+                                            <MDBFile class="form-control d-none" label="Wybierz zdjęcie"
+                                                @change="handleFileUpload($event)" id="image" accept=".jpg,.jpeg,.png" />
+                                        </div>
+                                    </div>
+                                    <MDBBtn color="warning" class="btn-sm" type="submit">Zatwierdź zdjęcie</MDBBtn>
+                                </form>
+
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body p-4">
+                                    <h6>Informacje</h6>
+                                    <hr class="mt-0 mb-4">
+                                    <div class="row pt-1">
+                                        <div class="col-6 mb-3">
+                                            <h6>Email</h6>
+                                            <p class="text-muted">{{ user.email }}</p>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h6>Telefon</h6>
+                                            <p class="text-muted">+48 {{ user.workplace }}</p>
+                                        </div>
+                                    </div>
+                                    <h6>Zmiana danych</h6>
+                                    <hr class="mt-0 mb-4">
+                                    <div class="row pt-1">
+                                        <div class="col-6">
+                                            <h6>nazwa uzytkownika</h6>
+                                            <form @submit.prevent="ChangeUsername">
+                                                <MDBInput label="Nowa nazwe użytkownika" v-model="new_username" type="text"
+                                                    required class="mb-1" />
+                                                <MDBInput label="Powtórz nazwę użytkownika" v-model="re_new_username"
+                                                    type="text" required class="mb-1" />
+                                                <MDBInput label="Podaj hasło" type="password" v-model="loginCurrentPassword"
+                                                    required class="mb-1" />
+                                                <MDBBtn color="primary" type="submit" text="center">zmień nazwę</MDBBtn>
+                                            </form>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <h6>hasło</h6>
+                                            <form @submit.prevent="ChangePassword">
+                                                <MDBInput label="stare haslo" type="password" v-model="current_password"
+                                                    required class="mb-1" />
+                                                <MDBInput label="nowe haslo" type="password" v-model="new_password" required
+                                                    class="mb-1" />
+                                                <MDBInput label="powtorz nowe haslo" type="password"
+                                                    v-model="re_new_password" required class="mb-1" />
+                                                <MDBBtn color="primary" type="submit">zmień hasło</MDBBtn>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <MDBBtn color="primary" type="submit">zmień</MDBBtn>
-                </form>
-            </MDBCardBody>
-        </MDBCard>
-    </MDBContainer>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -105,6 +139,7 @@ export default {
     },
     data() {
         return {
+            user: {},
             id: "",
             username: "",
             image: "",
@@ -118,7 +153,7 @@ export default {
             alert: "",
             errors: [],
             errorsUser: [],
-            
+
         };
     },
     directives: {
@@ -126,20 +161,36 @@ export default {
     },
     mounted() {
         document.title = "Mój profil";
+        this.getUser();
     },
-    beforeMount(){
+    beforeMount() {
         this.username = this.getUsername;
         this.id = this.getId;
     },
     computed: {
-    getUsername(){
-        return this.$store.state.user.username;
-    },
-    getId(){
-        return this.$store.state.user.id;
-    },
+        getUsername() {
+            return this.$store.state.user.username;
+        },
+        getId() {
+            return this.$store.state.user.id;
+        },
     },
     methods: {
+        getUser() {
+            axios
+                .get(`/api/v1/single_profile/${this.id}/`, {
+                    //params: {id: product_id},
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`
+                    }
+                })
+                .then((response) => {
+                    this.user = response.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
         ChangeUsername() {
             this.alert = "";
             this.errorsUser = [];
@@ -165,13 +216,12 @@ export default {
                         },
                     })
                     .then((response) => {
-                        console.log(response,"dziala zmiana nazwy uzytkownika");
                         this.$store.commit(
-                        "setUsername",this.new_username
+                            "setUsername", this.new_username
                         );
                         location.reload();
-                        this.alert="Pomyślnie zmieniono nazwe uzytkownika !";
-                        //this.notification = "pomyslnie zmieniono hasło ";
+                        this.alert = "Pomyślnie zmieniono nazwe uzytkownika !";
+                        this.alert = "pomyslnie zmieniono hasło ";
                         //this.$store.commit("setAlert", this.notification);
                     })
                     .catch((error) => {
@@ -203,7 +253,7 @@ export default {
                         },
                     })
                     .then((response) => {
-                        console.log(response,"dziala lol");
+                        console.log(response, "dziala lol");
                         location.reload();
                         //this.notification = "pomyslnie zmieniono hasło ";
                         //this.$store.commit("setAlert", this.notification);
@@ -221,7 +271,7 @@ export default {
                 .put(`/api/v1/change_avatar/`, formImage, {
                     headers: {
                         Authorization: `Token ${this.$store.state.user.token}`,
-                        
+
                     }
                 })
                 .then((response) => {

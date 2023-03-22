@@ -7,9 +7,8 @@
             <tr>
                 <th>Pracownik</th>
                 <th>Rola</th>
-                <th>Status</th>
-                <th>Position</th>
-                <th>Akcje</th>
+                <th>Kontakt</th>
+                <th class="text-center">Akcje</th>
             </tr>
         </thead>
         <tbody>
@@ -24,17 +23,16 @@
                         </div>
                     </div>
                 </td>
+                
                 <td>
                     <p class="fw-normal mb-1">{{ profile.role }}</p>
-                    <p class="text-muted mb-0">{{ profile.workplace }}</p>
                 </td>
                 <td>
-                    <MDBBadge badge="success" pill class="d-inline">Pracuje</MDBBadge>
+                    +48 {{profile.workplace}}
                 </td>
-                <td>Starszy</td>
-                <td>
-                    <MDBBtn color="link" size="sm" rounded>
-                        Edit
+                <td class="text-center">
+                    <MDBBtn color="danger" size="sm" class="text-right" rounded>
+                        Usuń pracownika
                     </MDBBtn>
                 </td>
             </tr>

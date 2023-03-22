@@ -1,29 +1,110 @@
 <template>
     <navbar></navbar>
-    <MDBCard class="mt-3">
-        <MDBCardHeader><h1>{{ name }}</h1></MDBCardHeader>
-        <MDBCardBody>
-            <MDBRow>
-                <MDBCol><img :src="image" alt="zdjecie" class="rounded-circle" style="width:200px;"></MDBCol>
-                <MDBCol>
-                    <h2>składniki</h2>
-                    <hr>
-                    <div v-for="product in product_list">
-                        {{ product.name }}
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                        <ol class="breadcrumb mb-0">
+                            <h2>Szczegóły {{ recipe.name }}</h2>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <div v-if="imagePreview.length === 0">
+                                <div v-if="recipe.get_image == '' ">
+                                    <img  src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg" alt="" loading="lazy" class="img-fluid mt-5 mb-2 rounded" style="width: 120px; height: 120px" />
+                                </div>
+                                <div v-if="recipe.get_image != '' ">
+                                    <img  :src="recipe.get_image" alt="" loading="lazy" class="img-fluid mt-5 mb-2 rounded" style="width: 120px; height: 120px" />
+                                </div>
+                            </div>
+                            <div v-if="imagePreview.length > 0">
+                                <img :src="imagePreview" alt="zdjecie" class="img-fluid my-5 rounded" style="width: 120px;height: 120px" />
+                            </div>
+                            <h5 class="my-3">{{ recipe.name }}</h5>
+                            
+                            <div class="d-flex justify-content-center mb-2">
+                                <button type="button" class="btn btn-outline-primary">Edytuj przepis</button>
+                                <button type="button" class="btn btn-danger ms-1">Usuń przepis</button>
+                            </div>
+                        </div>
                     </div>
-                </MDBCol>
-                <MDBCol>{{ description }} {{ price }}</MDBCol>
-            </MDBRow>
-        </MDBCardBody>
-    </MDBCard>
-    
-    
-    
-    
+                    <div class="card mb-4 mb-lg-0">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <p class="mb-0">{{recipe.description}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mx-auto">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Sałata</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0 text-end me-2">40 g</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Mięso mielone</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0 text-end me-2">150 g</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Ser szwajcarski</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0 text-end me-2">30 g</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Pomidory</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0 text-end me-2">30 g</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="card mb-4 w-25 float-end">
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex  text-end p-3">
+                                    <p class="mb-0"><b>Cena: </b> {{ recipe.price}} pln</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 
 <script>
+import HelloWorld from "@/components/HelloWorld.vue";
 import axios from "axios";
 import Navbar from "@/components/ui/Navbar.vue";
 import FormData from "form-data";
@@ -53,11 +134,13 @@ export default {
     },
     data() {
         return {
+            recipe: {},
             name: "",
             price: "",
             description: "",
             token: "",
             image: "",
+            imagePreview: "",
             recipe: "",
             product_list: [],
 
@@ -84,12 +167,8 @@ export default {
                     }
                 })
                 .then((response) => {
-                    this.name = response.data.name;
-                    this.description = response.data.description;
-                    this.price = response.data.price;
-                    this.image = response.data.get_image;
-                    this.product_list = response.data.product_list;
                     this.recipe = response.data;
+                    console.log(response.data,"opis co tu jest");
                 })
                 .catch((error) => {
                     console.log(error);

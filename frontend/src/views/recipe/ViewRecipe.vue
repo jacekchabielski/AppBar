@@ -5,7 +5,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="close()"></button>
     </div>
     
-    <MDBContainer fluid style="font-family: 'Molle', cursive;" class="text-center" >
+    <MDBContainer fluid style="font-family: 'Molle', cursive; background-color: #eee;" class="text-center"  >
         <MDBRow  class="mb-4 mt-2 col-md-12">
             <MDBCol class="col-md-10">
                 <MDBDropdown class="nav-item" v-model="dropdown1">

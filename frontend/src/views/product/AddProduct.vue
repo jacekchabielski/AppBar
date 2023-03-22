@@ -9,11 +9,11 @@
                 <form @submit.prevent="submitForm">
                     <div class="row">
                         <div class="col-md-6">
-                            <MDBInput type="text" label="name" id="name" wrapperClass="mb-4" v-model="name" required />
-                            <MDBTextarea label="description" id="description" wrapperClass="mb-4" v-model="description"
+                            <MDBInput type="text" label="Nazwa" id="name" wrapperClass="mb-4" v-model="name" required />
+                            <MDBTextarea label="Opis" id="description" wrapperClass="mb-4" v-model="description"
                                 rows="4" required />
-                            <MDBInput type="number" label="product_quantity" id="product_quantity" wrapperClass="mb-4"
-                                v-model="product_quantity" required />
+                            <MDBInput type="number" label="Ilość" id="product_quantity" wrapperClass="mb-4"
+                                v-model="product_quantity" data-toggle="tooltip" title="Ilość w gramach lub sztukach" required />
                                 <p>wybierz kategorie</p>
                                 <select class="form-select" id="idCategory" aria-label="Default select example" required>
                                     <option v-for="productCategory in productCategories" v-bind:key="productCategory.id" :value="productCategory.id">{{productCategory}}</option>

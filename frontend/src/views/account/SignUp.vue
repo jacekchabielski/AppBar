@@ -44,15 +44,21 @@
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <select class="form-select" id="login" aria-label="Default select example" v-model="role">
-                          <option value="Kucharz">wybierz role</option>
+                          <option value="Kucharz" disabled>wybierz role</option>
                           <option value="Kucharz">Kucharz</option>
                           <option value="Sprzedawca">Sprzedawca</option>
                           <option value="Kierownik">Kierownik</option>
                         </select>
                       </div>
                     </div>
-
-
+                    
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                        <MDBInput label="+48 123-456-789" type="tel"  pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" v-model="phone"/>
+                      </div>
+                    </div>
+                    
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
@@ -103,6 +109,7 @@ export default {
       first_name: '',
       last_name: '',
       email: '',
+      phone: '',
       role: '',
       password: '',
       password2: '',
@@ -138,7 +145,7 @@ export default {
         ProfileData.append('first_name', this.first_name);
         ProfileData.append('last_name', this.last_name);
         ProfileData.append('role', this.role);
-        ProfileData.append('workplace', this.workplace);
+        ProfileData.append('workplace', this.phone);
         ProfileData.append('email', this.email);
         axios
           .post('/api/v1/users/', formData)

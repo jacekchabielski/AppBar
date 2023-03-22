@@ -12,7 +12,7 @@
                             <MDBInput type="text" label="nazwa" id="name" wrapperClass="mb-4" v-model="name" required />
 
                             <MDBTextarea label="opis" id="description" wrapperClass="mb-4" v-model="description"
-                                rows="4" required />
+                                rows="4"  />
 
                             <MDBRow class="card border text-center ">
                                 <h5 class="my-auto mt-3 ">wybierz produkty</h5>
@@ -87,8 +87,9 @@
                                         <hr>
                                     </MDBCardTitle>
                                     <MDBCardText>
-                                        <li v-for="product in ProductsSelectedObject">
-                                            {{ product.name }} - {{ product.quantity }} szt.
+                                        <li  v-for="product in ProductsSelectedObject">
+                                            <b v-if="product.category != 'Alkohol' ">{{ product.name }} - {{ product.quantity }} g</b> 
+                                            <b v-if="product.category == 'Alkohol' ">{{ product.name }} - {{ product.quantity }} szt</b> 
                                         </li>
                                     </MDBCardText>
                                 </MDBCardBody>
@@ -248,9 +249,11 @@ export default {
                     let objectToPush = {
                         'id': this.products.products[number].id,
                         'name': this.products.products[number].name,
-                        'quantity': this.products.products[number].quantity
+                        'quantity': this.products.products[number].quantity,
+                        'category': this.products.products[number].Product_category_name
                     }
                     this.ProductsSelectedObject.push(objectToPush);
+                    console.log(this.ProductsSelectedObject, "a czy tu kate po zazna");
                     //ProductsSelectedObject.push(this.products.products[number].id, this.products.products[number].name );
                 
                 } else {
@@ -260,8 +263,7 @@ export default {
                 
             
         
-            console.log(this.selectedProducts, "wszystkiee checkboxy");
-            console.log(this.ProductsSelectedObject, 'obiekt zaznaczonych rzeczy');
+            
 
         },
 

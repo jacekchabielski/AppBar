@@ -70,8 +70,9 @@
                     </p>
                 </MDBCol>
 
-                <MDBCol class=" d-flex align-items-center justify-content-center">{{ product.product_quantity }}
-                </MDBCol>
+                <MDBCol v-if="product.Product_category_name == 'Alkohol'" class=" d-flex align-items-center justify-content-center">{{ product.product_quantity }} Butelek</MDBCol>
+                <MDBCol v-if="product.Product_category_name != 'Alkohol' && product.product_quantity < 1000 " class=" d-flex align-items-center justify-content-center">{{ product.product_quantity }} g</MDBCol>
+                <MDBCol v-if="product.Product_category_name != 'Alkohol' && product.product_quantity > 1000" class=" d-flex align-items-center justify-content-center">{{ product.product_quantity/1000 }} kg</MDBCol>
                 <MDBCol class=" d-flex align-items-center justify-content-center gap-1"
                     :class="{ 'align-items-start': !collapseList[index] }">
                     <MDBBtn color="link" size="sm" rounded>

@@ -1,6 +1,6 @@
 <template>
 
-  <MDBNavbar expand="lg" dark container style="background-color: #2b9788;">
+  <MDBNavbar expand="lg" dark container style="background-color: #e68a00;">
     <MDBNavbarBrand href="/" id="Logo">barApp</MDBNavbarBrand>
 
     <MDBNavbarToggler @click="collapse1 = !collapse1" target="#navbarSupportedContent">
@@ -148,7 +148,7 @@ export default {
         })
         .then((response) => {
                     this.user = response.data;
-                    console.log(response.data, 'respons wszystiego od usera');
+                  
                 })
                 .catch((error) => {
                     console.log(error);
