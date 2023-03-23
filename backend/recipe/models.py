@@ -20,7 +20,6 @@ class Recipe(models.Model):
     Recipe_category = models.ForeignKey(Recipe_category, on_delete=CASCADE, related_name='recipe_category', blank=True)
     created = models.DateTimeField(auto_now_add = True)
     deleted = models.BooleanField(default = False)
-    
     class Meta:
         ordering = ('-created',)
         

@@ -5,21 +5,18 @@
     </div>
 
     <MDBContainer class="text-center">
+      
       <MDBCard class="mb-4 mt-4 bg-light">
+        
         <MDBCardHeader>
           <h4>Stwórz zamówienie</h4>
         </MDBCardHeader>
         <MDBCardBody>
+        <form @submit.prevent="submitForm">
           <div class="row">
             <div class="col-4">
-              <form @submit.prevent="searchForm">
-                <MDBInput v-model="query" inputGroup :formOutline="false" wrapperClass="mb-3" placeholder="Wyszukaj danie"
-                  aria-label="Search">
-                  <MDBBtn color="primary" type="submit">
-                    <MDBIcon icon="search" />
-                  </MDBBtn>
-                </MDBInput>
-              </form>
+                
+              
               <MDBListGroup light data-bs-spy="scroll" data-bs-target="#list-example" id="list-example"
                 data-bs-offset="0">
                 <MDBListGroupItem tag="label" v-for="(recipe, index) in recipes.recipes" v-bind:key="recipe.id">
@@ -64,7 +61,7 @@
           </div>
           <div class="row mt-4">
             <div class="col-4">
-              <select class="form-select" aria-label="Default select example" id="idCategory">
+              <select class="form-select" aria-label="Default select example" id="idStolik">
                 <option selected>Brak stolika</option>
                 <option value="1">Stolik 1</option>
                 <option value="2">Stolik 2</option>
@@ -74,13 +71,15 @@
               </select>
             </div>
             <div class="col-6">
-              <MDBBtn color="primary">złóż zamówienie</MDBBtn>
+              <MDBBtn color="primary" type="submit">złóż zamówienie</MDBBtn>
             </div>
             <div class="col-2"><b>do zapłaty: {{ doZaplaty }} zł</b></div>
           </div>
+        </form>
         </MDBCardBody>
+      
       </MDBCard>
-
+   
       <MDBCard class="bg-light mt-5">
         <MDBCardHeader>Stoliki</MDBCardHeader>
         <MDBCardBody>
@@ -126,9 +125,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 import HelloWorld from "@/components/HelloWorld.vue";
 import Navbar from "@/components/ui/Navbar.vue";
+import FormData from "form-data";
+import { ref } from "vue";
 import { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardImg, MDBBtn, mdbRipple, MDBCol, MDBRow, MDBContainer, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBInput, MDBIcon, MDBTextarea, MDBCheckbox } from "mdb-vue-ui-kit";
 
 export default {
@@ -162,10 +163,10 @@ export default {
       recipes: {},
       doZaplaty: 0,
       selectedCheckboxes: [],       //zaznaczone produkty - id
-      selectedProducts: [], //nazwy zaaznaczonych produktów
+      selectedProducts: [], //ZAWIERA WSZYSTKIE INFO O ZAZNACZONYCH RZECZACH
       selectedProductsQuantity: [],
       selectedProductsPrice: [],
-      //ProductsSelectedObject: [],
+      ProductsSelectedObject: [],
     }
   },
   directives: {
@@ -208,6 +209,7 @@ export default {
           if(this.recipes.recipes[i].id == checkbox.value){
             console.log(this.recipes.recipes[i].name, "nazwa zaznaczonej rzeczy");
             let objectToPush = {
+            'id': this.recipes.recipes[i].id,
             'name': this.recipes.recipes[i].name,
             'quantity': this.recipes.recipes[i].quantity,
             'price': this.recipes.recipes[i].price,
@@ -218,9 +220,66 @@ export default {
         }
         
       }
-      console.log(this.selectedProductsNames, "nazwy zaznaczonych");
+      //console.log(this.selectedProductsNames, "nazwy zaznaczonych");
 
     },
+                                                                  //wysylanie zamowienia
+    submitForm() {
+      //console.log('DZIALA ????');
+      //name/table/price/status
+            let formData = new FormData();
+            //formData.append('name', 'cosnasztywno1');
+            formData.append('price', this.doZaplaty);
+            formData.append('status', 'Oczekuje');
+            var select = document.getElementById('idStolik');
+            var selectTableValue = select.options[select.selectedIndex].value ;
+            formData.append('table', selectTableValue);
+            axios
+              .post("/api/v1/add_order/", formData, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`,
+                        
+                    }
+                })
+                .then((response) => {
+                  console.log(response, 'DODANO ZAMÓWIENIE');
+                  
+                  //TU PISZEMY WYSYLANIE TEGO DALEJ LEEETS GOO
+
+                  for (let i = 0; i < this.selectedProducts.length; i++){
+                        let formData = new FormData();
+                        console.log(this.selectedProducts[i].id ,'product_id');
+                        formData.append('id', this.selectedProducts[i].id);
+                        formData.append('name',this.selectedProducts[i].name)
+                        formData.append('quantity',this.selectedProducts[i].quantity);
+                        //console.table(formData, 'jedno_do_wysłania');
+                        axios
+                            .post("/api/v1/add_recipe_to_order/", formData, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`,
+                        
+                    }
+                            })
+                            .then((response) => {
+                                console.log(response, 'Przepisy dodane do zamowienia');
+                                //this.$router.push({ path: '/ViewRecipe/1/'});
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
+                        formData.forEach((value,key) => { console.log(key+" "+value)});
+                    }
+
+                    //KONIEC KOPIOWANIA
+
+                })
+                .catch((error) => {
+                  console.log(error);
+                })
+
+      
+          
+        },
 
     
   },

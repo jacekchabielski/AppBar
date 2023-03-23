@@ -1,11 +1,26 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import Recipe
+from .models import Recipe, RecipeProduct, Product
 from product.serializers import ProductSerializer
 
-class RecipeSerializer(serializers.ModelSerializer):
-    product_list = ProductSerializer(source = 'product', read_only = True, many = True)
+
+class RecipeProductSerializer(serializers.ModelSerializer):
+
     class Meta:
+        model = RecipeProduct
+        fields = (
+            'id',
+            'product_id',
+            'recipe_id',
+            'quantity',
+            
+        )
+
+class RecipeSerializer(serializers.ModelSerializer):
+    product_list = RecipeProductSerializer(
+        source='id.recipe_id', read_only=True, many=True)
+    class Meta:
+
         model = Recipe
         fields = (
             'id',
@@ -21,3 +36,5 @@ class RecipeSerializer(serializers.ModelSerializer):
             'get_thumbnail',
             'Recipe_category'
         )
+
+

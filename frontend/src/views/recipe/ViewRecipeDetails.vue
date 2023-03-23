@@ -47,42 +47,17 @@
                 </div>
                 <div class="col-lg-6 mx-auto">
                     <div class="card mb-4">
-                        <div class="card-body">
+                        <div class="card-body" v-for="test in product_list">
                             <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Sałata</p>
+                                <div class="col-sm-5">
+                                    <p class="mb-0">{{test.name}}</p>
                                 </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0 text-end me-2">40 g</p>
+                                <div class="col-sm-7">
+                                    <p class="text-muted mb-0 text-end me-2">{{test.quantity}} g</p>
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Mięso mielone</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0 text-end me-2">150 g</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Ser szwajcarski</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0 text-end me-2">30 g</p>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Pomidory</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0 text-end me-2">30 g</p>
-                                </div>
-                            </div>
+                            
                             
                         </div>
                     </div>
@@ -154,6 +129,7 @@ export default {
     mounted() {
         const recipe_id = this.$route.params.id;   //? pobranie id przepisu z parametru - URL
         this.getRecipe();
+        this.getRecipeProducts();
     },
     methods: {
         getRecipe() {
@@ -174,6 +150,53 @@ export default {
                     console.log(error);
                 })
         },
+        getRecipeProducts() {
+            const recipe_id = this.$route.params.id;   //? pobranie id przepisu z parametru - URL
+            let formData = new FormData();
+            //formData.append('id', product_id);
+            axios
+                .get(`/api/v1/recipe_products/${recipe_id}/`, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`
+                    }
+                })
+                .then((response) => {
+                    //this.recipe = response.data;
+                    console.log(response.data,"produkty");
+                    for(let i = 0; i < response.data.length; i++){
+                        //this.product_list = response.data[i].product_quantity;
+                        //console.log(response.data[i].quantity, "ilosci produktow");
+                        //this.product_list.push(response.data[i].quantity);
+                        axios
+                            .get(`/api/v1/product/${response.data[i].product_id}/`, {
+                        headers: {
+                            Authorization: `Token ${this.$store.state.user.token}`
+                        }
+                        })
+                        .then((response2) => {
+                            let objectToPush = {
+                                'quantity': response.data[i].quantity,
+                                'name': response2.data.name,
+                            }
+                            this.product_list.push(objectToPush);
+                            //console.log(response.data.name,"nazwa produktu");
+                            //this.product_list.push(response.data.name);
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        })
+                        
+                    }
+                    console.log(this.product_list, "ilosc oraz nazwa");
+
+                    //this.product_list = response.data;
+
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
     }
 }
 </script>
+

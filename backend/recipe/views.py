@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Recipe
-from .serializers import RecipeSerializer
+from .models import Recipe, RecipeProduct
+from .serializers import RecipeSerializer, RecipeProductSerializer
 from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from django.db.models import Q
@@ -62,8 +62,17 @@ class ViewRecipe(APIView):
             return Recipe.objects.get(id = recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
+#######################################################
+class ViewRecipeProducts(APIView):
+    def get(self, request, id):
+        products = RecipeProduct.objects.filter(Q(recipe_id = id))
+        print(products, 'RECIPE PRODUCTS')
+        serializer = RecipeProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
+######################################################
+
+
 class AddRecipe(APIView):
 
     def post(self, request):
