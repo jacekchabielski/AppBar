@@ -8,7 +8,7 @@
             <MDBCardBody>
                 <form @submit.prevent="submitForm">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <MDBInput type="text" label="Nazwa" id="name" wrapperClass="mb-4" v-model="name"  required />
                             
                             <MDBTextarea label="Opis" id="description" wrapperClass="mb-4" v-model="description"
@@ -23,7 +23,7 @@
                                     </template>
                                 </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div v-if="imagePreview.length === 0">
                                 <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg"
                                     class="rounded-circle" alt="example placeholder" style="width: 200px;" />

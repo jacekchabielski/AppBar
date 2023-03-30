@@ -1,13 +1,24 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import Order
+from .models import Order, OrderRecipe, Recipe
 from recipe.serializers import RecipeSerializer
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    recipe_list = RecipeSerializer(
-        source='recipe', read_only=True, many=True)
+class OrderRecipeSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = OrderRecipe
+        fields = (
+            'id',
+            'product_id',
+            'recipe_id',
+            'quantity',
+            
+        )
+
+class OrderSerializer(serializers.ModelSerializer):
+   # recipe_list = RecipeSerializer(source='recipe', read_only=True, many=True)
+    created = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = Order
         fields = (
@@ -18,5 +29,5 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'slug',
             'deleted',
-            'recipe_list'
+            'created',
         )

@@ -13,6 +13,8 @@ import ViewRecipeDetails from '../views/recipe/ViewRecipeDetails.vue'
 import ViewUser from '../views/users/ViewUser.vue'
 import HomeOwner from '../views/HomeOwner.vue'
 import UserProfile from '../views/users/UserProfile.vue'
+import Kitchen from '../views/order/Kitchen.vue'
+import ViewOrders from '../views/order/ViewOrders.vue'
 const routes = [
   {
     path: '/',
@@ -24,6 +26,18 @@ const routes = [
     path: '/HomeOwner',
     name: 'HomeOwner',
     component: HomeOwner, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/Kitchen',
+    name: 'Kitchen',
+    component: Kitchen, 
+    meta: { requireLogin: true}
+  },
+  {
+    path: '/ViewOrders',
+    name: 'ViewOrders',
+    component: ViewOrders, 
     meta: { requireLogin: true}
   },
   {
@@ -75,6 +89,8 @@ const routes = [
     component: ViewRecipeDetails, 
     meta: { requireLogin: true}
   },
+
+
   {
     path: '/about',
     name: 'About',

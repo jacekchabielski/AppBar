@@ -14,6 +14,16 @@ from django.shortcuts import render, get_object_or_404
 from product.models import Product
 from django.http import HttpResponse
 
+class ViewAllRecipes(APIView):
+    def get(self, request): #! pobieranie wszystkiego
+        recipes = Recipe.objects.filter(Q(deleted = False))                                       #? ktore nie sa usuniete (deleted=False)
+        recipes = Recipe.objects.filter(Q(deleted = False)) #! ktore nie sa usuniete (deleted=False)
+        serializer = RecipeSerializer(recipes, many = True)
+        data = {}
+        data['recipes'] = serializer.data
+        return Response(data)
+    
+
 class ViewRecipes(APIView):
     def get(self, request): #! pobieranie wszystkiego
         page_number = self.request.query_params.get('page_number', 1)                               #? numer aktualnej strony (aktualnie pierwsza)
@@ -62,7 +72,29 @@ class ViewRecipe(APIView):
             return Recipe.objects.get(id = recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
-#######################################################
+        
+    def put(self, request, id):
+        data = self.request.data                #! nowe dane produktu
+        #id = self.request.data.get('id')        #* dane produktu
+        recipe = self.get_object(id)           #? Wywołanie metody pobrania produktu ze wskazaniem id (cały obiekt)
+        print(data, 'przed')
+        _mutable = data._mutable                                                                                         #* zezwolenie na modyfikowanie data
+        data._mutable = True
+        data._mutable = _mutable
+        print(data, 'po')
+        serializer = RecipeSerializer(recipe, data = data, partial=True ) #! serializer wstawia nowe dane
+        if serializer.is_valid():
+            recipe = serializer.save()
+            if 'image' in data:
+                recipe.image = data['image']
+                recipe.thumbnail = None
+                recipe.save()
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+#!######################################################
 class ViewRecipeProducts(APIView):
     def get(self, request, id):
         products = RecipeProduct.objects.filter(Q(recipe_id = id))
@@ -70,7 +102,7 @@ class ViewRecipeProducts(APIView):
         serializer = RecipeProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-######################################################
+#!#####################################################
 
 
 class AddRecipe(APIView):

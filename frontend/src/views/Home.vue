@@ -16,12 +16,11 @@
           <div class="row">
             <div class="col-4">
                 
-              
-              <MDBListGroup light data-bs-spy="scroll" data-bs-target="#list-example" id="list-example"
+              <MDBListGroup light data-bs-target="#list-example" id="list-example"
                 data-bs-offset="0">
                 <MDBListGroupItem tag="label" v-for="(recipe, index) in recipes.recipes" v-bind:key="recipe.id">
                   <div class="row">
-                  <div class="col-md-8">
+                  <div class="col-md-8" data-bs-spy="scroll" >
                     <MDBCheckbox class="form-check-input" :label="recipe.name" type="checkbox" id="mySelect"
                       name="checkbox" :value="recipe.id" :alt='recipe.name'
                       @change="myFunction(recipe.name, recipe.description)" />
@@ -35,7 +34,7 @@
               </MDBListGroup>
             </div>
             <div class="col-5">
-              <MDBTextarea label="Uwagi do zamówienia" rows="4" v-model="textareaValue" />
+              <MDBTextarea label="Uwagi do zamówienia" id="uwagi" wrapperClass="mb-4" rows="4" required />
               <p class="mt-4">opis dania</p> 
               <hr>
               {{description}}
@@ -174,18 +173,19 @@ export default {
   },
   mounted() {
     document.title = 'strona glowna'
+    this.getRecipes();
   },
   methods: {
     async getRecipes() {
       axios
-        .get('/api/v1/recipes/')
+        .get('/api/v1/recipes/all')
         .then((response) => {
           console.log(response, "przepisy wszystkie");
           this.recipes = response.data;
           for (let i = 0; i < response.data.recipes.length; i++) {
             this.recipe_quantity.push(0);
           }
-          console.log(this.recipe_quantity, "to jest tablica z zerami");
+          console.log(response.data, "ile przepisow ??");
         })
         .catch((error) => {
           console.log(error);
@@ -234,6 +234,7 @@ export default {
             var select = document.getElementById('idStolik');
             var selectTableValue = select.options[select.selectedIndex].value ;
             formData.append('table', selectTableValue);
+            console.log(formData, 'co jest w formdacie???');
             axios
               .post("/api/v1/add_order/", formData, {
                     headers: {
@@ -242,17 +243,14 @@ export default {
                     }
                 })
                 .then((response) => {
-                  console.log(response, 'DODANO ZAMÓWIENIE');
-                  
-                  //TU PISZEMY WYSYLANIE TEGO DALEJ LEEETS GOO
-
+                  console.log(response, 'DODANO ZAMÓWIENIE');                                 
                   for (let i = 0; i < this.selectedProducts.length; i++){
                         let formData = new FormData();
                         console.log(this.selectedProducts[i].id ,'product_id');
                         formData.append('id', this.selectedProducts[i].id);
                         formData.append('name',this.selectedProducts[i].name)
                         formData.append('quantity',this.selectedProducts[i].quantity);
-                        //console.table(formData, 'jedno_do_wysłania');
+                      
                         axios
                             .post("/api/v1/add_recipe_to_order/", formData, {
                     headers: {
@@ -262,7 +260,6 @@ export default {
                             })
                             .then((response) => {
                                 console.log(response, 'Przepisy dodane do zamowienia');
-                                //this.$router.push({ path: '/ViewRecipe/1/'});
                             })
                             .catch((error) => {
                                 console.log(error);
@@ -270,7 +267,7 @@ export default {
                         formData.forEach((value,key) => { console.log(key+" "+value)});
                     }
 
-                    //KONIEC KOPIOWANIA
+                    
 
                 })
                 .catch((error) => {
@@ -285,7 +282,7 @@ export default {
   },
   beforeMount() {
     this.username = this.getUsername;
-    this.getRecipes();
+    
   },
   computed: {
     getUsername() {

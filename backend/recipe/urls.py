@@ -3,6 +3,7 @@ from .views import ViewRecipes, ViewRecipe, AddRecipe, AddProduct_to_Recipe, Vie
 from recipe import views
 
 urlpatterns = [
+    path('recipes/all/', views.ViewAllRecipes.as_view()), #? zwwraca wszystkie produkty
     path('recipe/<int:id>/', views.ViewRecipe.as_view()), #! zwraca przepis
     path('add_recipe/', views.AddRecipe.as_view()), #! dodawanie przepisu
     path('add_product_to_recipe/', views.AddProduct_to_Recipe.as_view()), #! dodawanie produktu do przepisu

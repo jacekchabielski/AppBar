@@ -33,7 +33,9 @@
             </MDBDropdownMenu>
           </MDBDropdown>
         </MDBNavbarItem>
-        <MDBNavbarItem href="/ViewUser">pracownicy</MDBNavbarItem>
+        <MDBNavbarItem href="/ViewUser"><i class="fas fa-users"></i> Pracownicy</MDBNavbarItem>
+        <MDBNavbarItem href="/Kitchen"><i class="fas fa-pizza-slice"></i> Kuchnia</MDBNavbarItem>
+        <MDBNavbarItem href="/ViewOrders"><i class="fas fa-clipboard-list"></i> Zamówienia</MDBNavbarItem>
         <MDBNavbarNav right>
           <MDBNavbarItem>
             <!-- Navbar dropdown -->
