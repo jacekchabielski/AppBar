@@ -45,8 +45,8 @@ class Order(models.Model):
         if not order_recipe is None: order_recipe.delete()
 
 class OrderRecipe(models.Model):
-    recipe_id = models.ForeignKey(Recipe, on_delete=CASCADE, related_name='recipe_idd', blank=False)
-    order_id = models.ForeignKey(Order,  on_delete=CASCADE, related_name='order_id', blank=False)
+    recipe_id = models.ForeignKey(Recipe, on_delete=CASCADE, related_name='recipe', blank=False)
+    order_id = models.ForeignKey(Order,  on_delete=CASCADE, related_name='order', blank=False)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(1)])
     created = models.DateTimeField(auto_now_add=True)
 

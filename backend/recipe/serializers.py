@@ -17,8 +17,8 @@ class RecipeProductSerializer(serializers.ModelSerializer):
         )
 
 class RecipeSerializer(serializers.ModelSerializer):
-    product_list = RecipeProductSerializer(
-        source='id.recipe_id', read_only=True, many=True)
+   # product_list = RecipeProductSerializer(
+       # source='id.recipe_id', read_only=True, many=True)
     class Meta:
 
         model = Recipe
@@ -30,7 +30,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'slug',
             'created',
             'deleted',
-            'product_list',   
+            #'product_list',   
             'get_absolute_url',
             'get_image',
             'get_thumbnail',

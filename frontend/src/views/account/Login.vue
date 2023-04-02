@@ -41,16 +41,41 @@
                     </div>
 
                   </form>
-                  <div>
-                    <br>
-                      nie masz konta? <a href="/SignUp">zarejestruj się</a>
-                  </div>
+                  
 
                 </div>
                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                    class="img-fluid" alt="Sample image">
+                  <MDBTable>
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Haslo</th>
+                        <th scope="col">Rola</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>KucharzMarcin</td>
+                        <td>haslo123!</td>
+                        <td>Kucharz</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>MarcinKierownik</td>
+                        <td>haslo123!</td>
+                        <td>Kierownik</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>SprzedawcaWojtek</td>
+                        <td>haslo123!</td>
+                        <td>Sprzedawca</td>
+                      </tr>
+                    </tbody>
+                  </MDBTable>
 
                 </div>
 
@@ -74,7 +99,7 @@
 </template>
 
 <script>
-import { MDBInput } from 'mdb-vue-ui-kit';
+import { MDBInput, MDBTable } from 'mdb-vue-ui-kit';
 import axios from 'axios'
 export default {
   data() {
@@ -82,11 +107,13 @@ export default {
       username: '',
       password: '',
       token: '',
+      id: '',
       errors: []
     }
   },
   components: {
     MDBInput,
+    MDBTable,
   },
 
 
@@ -123,7 +150,30 @@ export default {
             .then((response) => {
               this.$store.commit('setUserId', response.data.id)
               localStorage.setItem('id', response.data.id)
-              window.location.href = '/'
+
+              axios
+                .get(`/api/v1/single_profile/${response.data.id}/`, {
+                    //params: {id: product_id},
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`
+                    }
+                })
+                .then((response2) => {
+            
+                    if(response2.data.role === 'Kucharz'){
+                      window.location.href = '/Kitchen'
+                    }
+                    if(response2.data.role === 'Sprzedawca'){
+                      window.location.href = '/'
+                    }
+                    if(response2.data.role === 'Kierownik'){
+                      window.location.href = '/ViewUser'
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+              //window.location.href = '/'
             })
             .catch((error) => {
               console.log(error)

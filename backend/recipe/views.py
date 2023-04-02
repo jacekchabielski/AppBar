@@ -94,6 +94,21 @@ class ViewRecipe(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
+    def delete(self, request, id):
+        #data = self.request.data
+        #id = self.request.data.get('id')  
+        data = {}
+        data['deleted'] = True
+        recipe = self.get_object(id)
+        #print(product.deleted)
+        serializer = RecipeSerializer(recipe, data = data, partial=True ) #! serializer wstawia nowe dane
+        if serializer.is_valid():   
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+
 #!######################################################
 class ViewRecipeProducts(APIView):
     def get(self, request, id):

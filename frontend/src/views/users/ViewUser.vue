@@ -31,7 +31,7 @@
                     +48 {{profile.workplace}}
                 </td>
                 <td class="text-center">
-                    <MDBBtn color="danger" size="sm" class="text-right" rounded>
+                    <MDBBtn color="danger" size="sm" class="text-right" v-if="profile.role != 'Kierownik'" rounded  @Click="setId(profile.id)">
                         Usuń pracownika
                     </MDBBtn>
                 </td>
@@ -39,6 +39,31 @@
             
         </tbody>
     </MDBTable>
+    
+</div>
+<div class="modal" id="myModal" :class="{ 'show-modal': actualId }" v-show="actualId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Czy na pewno chcesz usunąć ?</h4>
+                <button type="button" class="btn-close" v-on:click="actualId = null"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">Usuniesz pracownika</div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" v-on:click="deleteProduct(actualId)">
+                    Usuń
+                </button>
+                <button type="button" class="btn margin-left" v-on:click="actualId = null">
+                    powrót
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -63,6 +88,7 @@ export default {
     data() {
         return {
             profiles: [],
+            actualId: "",
         }
     },
     directives: {
@@ -84,7 +110,28 @@ export default {
                 .catch((error)=>{
                     console.log(error)
                 })
-        }
+        },
+        setId(id) {
+            this.actualId = id;
+            console.log(this.actualId, "dd");
+        },
+        async deleteProduct(id) {
+            console.log(id, "delete user id");
+            axios
+                .delete(`/api/v1/single_profile/${id}/`, {
+                    headers: {
+                        Authorization: `Token ${this.$store.state.user.token}`,
+                    },
+                })
+                .then((response) => {
+                    console.log(response);
+                    this.actualId = null;
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     }
 };
 </script>

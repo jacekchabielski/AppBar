@@ -1,14 +1,14 @@
 <template>
 
   <MDBNavbar expand="lg" dark container style="background-color: #e68a00;">
-    <MDBNavbarBrand href="/" id="Logo">barApp</MDBNavbarBrand>
+    <MDBNavbarBrand id="Logo">barApp</MDBNavbarBrand>
 
     <MDBNavbarToggler @click="collapse1 = !collapse1" target="#navbarSupportedContent">
     </MDBNavbarToggler>
     <MDBCollapse v-model="collapse1" id="navbarSupportedContent">
       <MDBNavbarNav center class="mb-2 mb-lg-0">
 
-        <MDBNavbarItem>
+        <MDBNavbarItem v-if="user.role != 'Sprzedawca'">
           <!-- Navbar dropdown produkty -->
           <MDBDropdown class="nav-item" v-model="dropdown3">
             <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown3 = !dropdown3">
@@ -28,14 +28,15 @@
               <i class="fas fa-book"></i> Przepisy
             </MDBDropdownToggle>
             <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-              <MDBDropdownItem href="/AddRecipe"><i class="fas fa-plus"></i> Dodaj przepis</MDBDropdownItem>
+              <MDBDropdownItem href="/AddRecipe" v-if="user.role === 'Kucharz'"><i class="fas fa-plus"></i> Dodaj przepis</MDBDropdownItem>
               <MDBDropdownItem href="/ViewRecipe/1/"><i class="fas fa-eye"></i> Wyświetl przepisy</MDBDropdownItem>
             </MDBDropdownMenu>
           </MDBDropdown>
         </MDBNavbarItem>
-        <MDBNavbarItem href="/ViewUser"><i class="fas fa-users"></i> Pracownicy</MDBNavbarItem>
-        <MDBNavbarItem href="/Kitchen"><i class="fas fa-pizza-slice"></i> Kuchnia</MDBNavbarItem>
+        <MDBNavbarItem href="/ViewUser" v-if="user.role != 'Sprzedawca' && user.role != 'Kucharz' "><i class="fas fa-users"></i> Pracownicy</MDBNavbarItem>
+        <MDBNavbarItem href="/Kitchen" v-if="user.role != 'Sprzedawca' && user.role != 'Kierownik' "><i class="fas fa-pizza-slice"></i> Kuchnia</MDBNavbarItem>
         <MDBNavbarItem href="/ViewOrders"><i class="fas fa-clipboard-list"></i> Zamówienia</MDBNavbarItem>
+        <MDBNavbarItem href="/" v-if="user.role === 'Sprzedawca' "><i class="fas fa-dollar-sign"></i> Sprzedaż</MDBNavbarItem>
         <MDBNavbarNav right>
           <MDBNavbarItem>
             <!-- Navbar dropdown -->
@@ -150,7 +151,6 @@ export default {
         })
         .then((response) => {
                     this.user = response.data;
-                  
                 })
                 .catch((error) => {
                     console.log(error);

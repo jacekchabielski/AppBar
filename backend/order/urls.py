@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import ViewOrder, AddOrder, AddRecipe_to_Order
+from .views import ViewOrder, AddOrder, AddRecipe_to_Order, ViewOrderRecipes, OrderOrderRecipes
 from order import views
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('order/<int:id>/', views.ViewOrder.as_view()),                     #! zwraca order
     path('add_recipe_to_order/', views.AddRecipe_to_Order.as_view()),
     path('order_recipes/<int:id>/', views.ViewOrderRecipes.as_view()),
+    path('order/<int:id>/order_recipes/', views.OrderOrderRecipes.as_view()),
 ]

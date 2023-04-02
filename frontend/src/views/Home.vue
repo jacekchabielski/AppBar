@@ -182,6 +182,7 @@ export default {
         .then((response) => {
           console.log(response, "przepisy wszystkie");
           this.recipes = response.data;
+          console.log(response.data, 'resposne data co tu jest ?');
           for (let i = 0; i < response.data.recipes.length; i++) {
             this.recipe_quantity.push(0);
           }
@@ -260,6 +261,7 @@ export default {
                             })
                             .then((response) => {
                                 console.log(response, 'Przepisy dodane do zamowienia');
+                                location.reload();
                             })
                             .catch((error) => {
                                 console.log(error);

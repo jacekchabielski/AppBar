@@ -10,14 +10,14 @@ class OrderRecipeSerializer(serializers.ModelSerializer):
         model = OrderRecipe
         fields = (
             'id',
-            'product_id',
             'recipe_id',
+            'order_id',
             'quantity',
             
         )
 
 class OrderSerializer(serializers.ModelSerializer):
-   # recipe_list = RecipeSerializer(source='recipe', read_only=True, many=True)
+# recipe_list = RecipeSerializer(source='recipe', read_only=True, many=True)
     created = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     class Meta:
         model = Order

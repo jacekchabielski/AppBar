@@ -88,9 +88,18 @@ class AddRecipe_to_Order(APIView):
 ######################################################
 class ViewOrderRecipes(APIView):
     def get(self, request, id):
-        recipes = OrderRecipe.objects.filter(Q(order_id = id))
+        print(id, 'iddddd')
+        recipes = OrderRecipe.objects.get(id = id)
         print(recipes, 'ORDER RECIPES')
-        serializer = OrderRecipeSerializer(recipes, many=True)
+        serializer = OrderRecipeSerializer(recipes)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 ######################################################
+class OrderOrderRecipes(APIView):
+    def get(self, request, id):
+        print(id, 'iddddd')
+        recipes = OrderRecipe.objects.filter(order_id = id)
+        print(recipes, 'wszystkie recipes')
+        serializer = OrderRecipeSerializer(recipes, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    

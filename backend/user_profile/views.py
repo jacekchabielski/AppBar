@@ -50,6 +50,21 @@ class ViewSingleProfile(APIView):
         user_profile = User_Profile.objects.get(id=user.id)
         serializer = User_ProfileSerializer(user_profile)                                      #? ktore nie sa usuniete (deleted=False)
         return Response(serializer.data)
+    
+    #def delete(self, request, id):
+        
+        #data = self.request.data
+        #id = self.request.data.get('id')  
+        #data = {}
+        #data['deleted'] = True
+        #user = self.get_object(id)
+        #print(product.deleted)
+        #serializer = User_ProfileSerializer(user, data = data, partial=True ) #! serializer wstawia nowe dane
+        #if serializer.is_valid():   
+        #   serializer.save()
+        #   return Response(serializer.data, status=status.HTTP_200_OK)
+        #else:
+        #  return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
     def get_object(self, profile_id):
         try:
